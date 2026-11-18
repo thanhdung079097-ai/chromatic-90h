@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chromatic 90H Mastery — Jazz Lounge Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#12100E',
+            charcoal: '#1C1917',
+            walnut: '#27221E',
+            brass: '#D97706',
+            amberGlow: '#F59E0B',
+            cream: '#F5F5F4',
+            parchment: '#D6D3D1',
+            muted: '#A8A29E'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #12100E;
+      color: #F5F5F4;
+      font-family: 'Inter', sans-serif;
+      background-image: radial-gradient(circle at 50% 0%, rgba(217, 119, 6, 0.12), transparent 60%);
+    }
+    .vintage-card {
+      background: linear-gradient(145deg, #1C1917 0%, #171412 100%);
+      border: 1px solid rgba(217, 119, 6, 0.22);
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+    }
+    .vintage-border {
+      border-color: rgba(217, 119, 6, 0.28);
+    }
+    .brass-btn {
+      background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+      color: #FFFBEB;
+      transition: all 0.2s ease;
+    }
+    .brass-btn:hover {
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #12100E; }
+    ::-webkit-scrollbar-thumb { background: #44403C; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #D97706; }
+    .pulse-amber {
+      animation: pulseAmber 1.5s infinite;
+    }
+    @keyframes pulseAmber {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
+      50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16 selection:bg-brass selection:text-white">
+
+  <!-- STICKY HEADER & MASTER CONTROLS -->
+  <header class="sticky top-0 z-40 bg-obsidian/95 backdrop-blur-md border-b border-amber-900/40 px-3 py-2.5 shadow-xl">
+    <div id="headerContainer" class="max-w-xl mx-auto flex flex-wrap items-center justify-between gap-2 transition-all duration-300">
+      
+      <!-- Brand & Layout Switch -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-600 to-amber-900 flex items-center justify-center border border-amber-400/40 shadow-inner">
+          <span class="font-serif font-bold text-lg text-amber-100">C</span>
+        </div>
+        <div>
+          <h1 class="font-serif font-bold text-sm sm:text-base tracking-wide text-amber-100 flex items-center gap-1.5">
+            CHROMATIC 90H
+            <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-950/90 text-amber-400 border border-amber-700/40">12-Hole C</span>
+          </h1>
+          <p class="text-[11px] text-muted hidden sm:block">Phòng Luyện Hơi Thở & Nhịp Điệu Jazz</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Bar -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <button id="layoutToggleBtn" onclick="toggleLayoutMode()" class="px-2.5 py-1.5 rounded-lg bg-walnut hover:bg-stone-800 text-amber-300 border border-amber-700/40 text-xs font-medium flex items-center gap-1.5 transition" title="Chuyển chế độ Màn hình phụ dọc / Màn hình ngang">
+          <span id="layoutIcon">↕</span>
+          <span id="layoutLabel">Màn Dọc</span>
+        </button>
+
+        <button onclick="openMetronomeGuide()" class="px-2 py-1.5 rounded-lg bg-walnut hover:bg-stone-800 text-parchment border border-stone-700 text-xs" title="Cẩm nang hiểu & tập với Metronome">
+          ⏱ Cẩm nang Nhịp
+        </button>
+
+        <button onclick="exportDataJSON()" class="px-2 py-1.5 rounded-lg bg-walnut hover:bg-stone-800 text-parchment border border-stone-700 text-xs" title="Sao lưu tiến độ 90h & Nhật ký ra file JSON">
+          ⬇ Sao lưu
+        </button>
+
+        <label class="px-2 py-1.5 rounded-lg bg-walnut hover:bg-stone-800 text-parchment border border-stone-700 text-xs cursor-pointer" title="Khôi phục từ file JSON">
+          ⬆ Nạp
+          <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importDataJSON(event)" />
+        </label>
+      </div>
+    </div>
+
+    <!-- STICKY MINI BAR: 90H MASTER TIMER + QUICK METRONOME -->
+    <div id="stickyToolsContainer" class="max-w-xl mx-auto mt-2 pt-2 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <!-- Master 90H status -->
+      <div class="flex items-center gap-2 bg-charcoal px-2.5 py-1.5 rounded-lg border border-amber-800/40">
+        <span class="text-[11px] text-muted uppercase tracking-wider">Quỹ 90H:</span>
+        <span id="masterCountdownDisplay" class="font-mono font-bold text-sm sm:text-base text-amber-400">90:00:00</span>
+        <button id="freePracticeBtn" onclick="toggleFreePractice()" class="px-2 py-0.5 rounded bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/40 text-[11px] font-medium transition">
+          ▶ Tập tự do
+        </button>
+      </div>
+
+      <!-- Active Exercise Timer Pill -->
+      <div id="activeTaskBanner" class="hidden items-center gap-2 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-500/50">
+        <span id="activeTaskName" class="text-amber-200 font-medium truncate max-w-[130px]">Đang tập...</span>
+        <span id="activeTaskTime" class="font-mono font-bold text-amber-400">10:00</span>
+        <button onclick="pauseActiveTask()" id="activeTaskPauseBtn" class="text-amber-300 hover:text-white px-1">⏸</button>
+        <button onclick="finishActiveTaskEarly()" class="text-emerald-400 hover:text-emerald-300 px-1" title="Hoàn thành & Chốt nhật ký">✔ Xong</button>
+      </div>
+
+      <!-- Mini Metronome Pill -->
+      <div class="flex items-center gap-1.5 bg-charcoal px-2.5 py-1 rounded-lg border border-stone-800">
+        <button id="metroToggleBtn" onclick="toggleMetronome()" class="px-2 py-0.5 rounded bg-stone-800 hover:bg-amber-700 text-amber-300 font-medium transition">
+          ▶ Nhịp
+        </button>
+        <button onclick="adjustBpm(-5)" class="px-1.5 text-muted hover:text-white">-</button>
+        <span id="miniBpmDisplay" class="font-mono font-bold text-amber-300 w-14 text-center">60 BPM</span>
+        <button onclick="adjustBpm(5)" class="px-1.5 text-muted hover:text-white">+</button>
+        <div id="miniBeatDots" class="flex items-center gap-1 ml-1">
+          <span class="w-2 h-2 rounded-full bg-stone-700"></span>
+          <span class="w-2 h-2 rounded-full bg-stone-700"></span>
+          <span class="w-2 h-2 rounded-full bg-stone-700"></span>
+          <span class="w-2 h-2 rounded-full bg-stone-700"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE CONTAINER (Switches between max-w-xl Vertical and max-w-7xl 3-Col Horizontal) -->
+  <main id="mainWorkspace" class="max-w-xl mx-auto px-3 pt-4 grid grid-cols-1 gap-4 transition-all duration-300">
+
+    <!-- ================= COLUMN 1: INSPIRATION, 90H PROGRESS, METRONOME & 12-HOLE STAFF MAP ================= -->
+    <section class="space-y-4">
+      
+      <!-- 1. HERO SECTION: DAILY JAZZ QUOTE & PROVOCATIVE NUDGE -->
+      <div class="vintage-card rounded-xl p-4 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-mono uppercase tracking-widest text-amber-500 flex items-center gap-1.5">
+            <span>🎷</span> Tâm thế Nghệ sĩ Hôm nay
+          </span>
+          <button onclick="cycleQuote()" class="text-[11px] text-muted hover:text-amber-400 transition">
+            ↻ Đổi cảm hứng
+          </button>
+        </div>
+        <blockquote id="dailyQuoteText" class="font-serif italic text-base sm:text-lg text-amber-100 leading-relaxed">
+          "Giữa một nốt nhạc và một giọt nước mắt chỉ cách nhau đúng một làn hơi."
+        </blockquote>
+        <p id="dailyQuoteAuthor" class="text-xs text-amber-500/90 mt-1 font-medium">— Toots Thielemans</p>
+
+        <div class="mt-3 pt-3 border-t border-amber-900/30 bg-amber-950/25 -mx-4 -mb-4 p-3.5">
+          <div class="flex items-start gap-2.5">
+            <span class="text-amber-400 text-base mt-0.5">🔥</span>
+            <div>
+              <p class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-semibold">Lời khích tướng từ Thầy</p>
+              <p id="provocativeNudgeText" class="text-xs sm:text-sm text-cream mt-0.5 leading-relaxed">
+                Cây kèn nằm trong hộp chỉ là cục đồng vô tri. Hoặc cầm nó lên ép hơi bụng 25 phút tối nay để tiếng kèn rền vang dưới ánh đèn vàng, hoặc ngày mai lại tiếp tục nhìn tab số thổi như một cái máy đọc chữ. Chọn đi!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 90-HOUR MASTERY DASHBOARD -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">Đồng Hồ 90 Giờ Chinh Phục</h2>
+            <p class="text-xs text-muted">Mỗi giây tập thực chất đều đẩy bạn rời xa trình độ nghiệp dư</p>
+          </div>
+          <span id="masterPercentageBadge" class="font-mono text-xs px-2 py-1 rounded bg-amber-950 text-amber-300 border border-amber-700/40">
+            0.0%
+          </span>
+        </div>
+
+        <div class="my-3 bg-obsidian rounded-xl p-3.5 border border-amber-900/40 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] text-muted block">THỜI GIAN CÒN LẠI</span>
+            <span id="largeCountdownDisplay" class="font-mono font-bold text-2xl sm:text-3xl text-amber-400 tracking-tight">90:00:00</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-muted block">ĐÃ TÍCH LŨY</span>
+            <span id="accumulatedTimeDisplay" class="font-mono font-semibold text-sm sm:text-base text-emerald-400">0h 00p 00s</span>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full h-2.5 bg-obsidian rounded-full overflow-hidden border border-stone-800">
+          <div id="masterProgressBar" class="h-full bg-gradient-to-r from-amber-700 via-amber-500 to-yellow-400 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div class="mt-3 flex items-center justify-between text-xs text-muted">
+          <span id="timerStatusIndicator" class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-stone-600" id="statusDot"></span>
+            <span id="statusText">Đang tạm dừng — Chọn 1 bài tập để chạy giờ</span>
+          </span>
+          <button onclick="manualAdjustHours()" class="text-[11px] text-amber-500 hover:underline">Chỉnh bù giờ</button>
+        </div>
+      </div>
+
+      <!-- 3. INTERACTIVE 12-HOLE CHROMATIC & TREBLE CLEF STAFF MAP -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">Bản Đồ 12 Lỗ & Khuông Nhạc Khóa Sol</h2>
+            <p class="text-xs text-muted">Bấm vào lỗ hoặc nốt để nghe chuẩn tần số Hz & xóa mù nốt nhạc</p>
+          </div>
+          <!-- Breath & Slide toggles -->
+          <div class="flex items-center gap-1.5">
+            <button id="breathBlowBtn" onclick="setMapBreath('blow')" class="px-2.5 py-1 rounded text-xs font-medium bg-amber-600 text-white">
+              Thổi ↑
+            </button>
+            <button id="breathDrawBtn" onclick="setMapBreath('draw')" class="px-2.5 py-1 rounded text-xs font-medium bg-walnut text-parchment border border-stone-700">
+              Hút ↓
+            </button>
+            <button id="slideToggleBtn" onclick="toggleMapSlide()" class="px-2.5 py-1 rounded text-xs font-mono font-medium bg-walnut text-amber-300 border border-amber-700/50" title="Giữ nút bấm Slide (+1/2 cung)">
+              Slide: TẮT
+            </button>
+          </div>
+        </div>
+
+        <!-- SVG Treble Clef Staff -->
+        <div class="bg-obsidian rounded-xl p-3 border border-amber-900/40 mb-3">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span id="selectedNoteTitle" class="font-semibold text-amber-300">Lỗ 5 • Thổi ↑ (Không Slide) → Nốt Đô (C5)</span>
+            <span id="selectedNoteFreq" class="font-mono text-[11px] text-muted">523.25 Hz</span>
+          </div>
+          <svg id="staffSvg" viewBox="0 0 380 120" class="w-full h-28 select-none">
+            <!-- Staff 5 lines (E4=85, G4=73, B4=61, D5=49, F5=37) -->
+            <line x1="20" y1="37" x2="360" y2="37" stroke="#57534E" stroke-width="1.2" />
+            <line x1="20" y1="49" x2="360" y2="49" stroke="#57534E" stroke-width="1.2" />
+            <line x1="20" y1="61" x2="360" y2="61" stroke="#57534E" stroke-width="1.2" />
+            <line x1="20" y1="73" x2="360" y2="73" stroke="#57534E" stroke-width="1.2" />
+            <line x1="20" y1="85" x2="360" y2="85" stroke="#57534E" stroke-width="1.2" />
+            
+            <!-- Treble Clef Symbol -->
+            <text x="26" y="78" fill="#D97706" font-size="54" font-family="serif">𝄞</text>
+
+            <!-- Dynamic Ledger lines & Note group rendered by JS -->
+            <g id="svgNoteRenderGroup"></g>
+          </svg>
+          <p id="holeSpecialWarning" class="text-[11px] text-amber-400/90 mt-1">
+            💡 Lỗ 5–8 là quãng trung chuẩn nhất để luyện tiếng tròn và đọc bản nhạc.
+          </p>
+        </div>
+
+        <!-- 12 Holes Interactive Grid -->
+        <div class="mb-2">
+          <div class="flex justify-between text-[10px] font-mono text-muted mb-1 px-1">
+            <span>QUÃNG TRẦM (1-4)</span>
+            <span class="text-amber-400">QUÃNG TRUNG (5-8)</span>
+            <span>QUÃNG CAO (9-12)</span>
+          </div>
+          <div id="harmonicaHolesGrid" class="grid grid-cols-6 sm:grid-cols-12 gap-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. FULL STUDIO METRONOME -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">Metronome Phòng Tập</h2>
+            <p class="text-xs text-muted">Hơi bụng bám chặt vào từng tiếng click</p>
+          </div>
+          <button onclick="openMetronomeGuide()" class="text-xs text-amber-400 hover:underline">
+            Cách chia phách?
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between bg-obsidian p-3 rounded-xl border border-stone-800 mb-3">
+          <div>
+            <span id="fullBpmValue" class="font-mono font-bold text-2xl text-amber-400">60</span>
+            <span class="text-xs text-muted font-mono">BPM</span>
+            <p id="tempoNameLabel" class="text-[11px] text-parchment">Largo — Chậm, rèn hơi sâu</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="timeSigSelect" onchange="changeTimeSignature(this.value)" class="bg-walnut text-xs text-cream px-2.5 py-1.5 rounded-lg border border-stone-700">
+              <option value="4">Nhịp 4/4 (Jazz/Ballad)</option>
+              <option value="3">Nhịp 3/4 (Waltz)</option>
+              <option value="2">Nhịp 2/4 (Bossa Nova)</option>
+            </select>
+            <button id="mainMetroBtn" onclick="toggleMetronome()" class="brass-btn px-4 py-2 rounded-lg text-xs font-semibold shadow">
+              ▶ Bật Nhịp
+            </button>
+          </div>
+        </div>
+
+        <input id="bpmSlider" type="range" min="40" max="200" value="60" oninput="setBpm(this.value)" class="w-full accent-amber-500 cursor-pointer mb-2" />
+        
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="setBpm(55)" class="px-2 py-1 rounded bg-walnut hover:bg-stone-800 text-[11px] text-parchment border border-stone-700">55 BPM (Vỡ bài)</button>
+          <button onclick="setBpm(65)" class="px-2 py-1 rounded bg-walnut hover:bg-stone-800 text-[11px] text-parchment border border-stone-700">65 BPM (Ballad)</button>
+          <button onclick="setBpm(80)" class="px-2 py-1 rounded bg-walnut hover:bg-stone-800 text-[11px] text-parchment border border-stone-700">80 BPM (Andante)</button>
+          <button onclick="setBpm(105)" class="px-2 py-1 rounded bg-walnut hover:bg-stone-800 text-[11px] text-parchment border border-stone-700">105 BPM (Bossa)</button>
+          <button onclick="setBpm(120)" class="px-2 py-1 rounded bg-walnut hover:bg-stone-800 text-[11px] text-parchment border border-stone-700">120 BPM (Swing)</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= COLUMN 2: 6-MONTH CURRICULUM, DAILY LESSONS, TOMORROW TASKS ================= -->
+    <section class="space-y-4">
+
+      <!-- SPECIAL ADAPTIVE TASKS FOR TOMORROW (Generated after completing lessons) -->
+      <div class="vintage-card rounded-xl p-4 border-l-4 border-l-amber-500">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-serif font-bold text-base text-amber-100 flex items-center gap-1.5">
+            <span>🎯</span> Nhiệm Vụ Thích Ứng Ngày Mai
+          </h2>
+          <span id="adaptiveCountBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/40">0 bài</span>
+        </div>
+        <p class="text-xs text-muted mb-2.5">
+          Do chính kết quả tập luyện hôm nay của bạn sinh ra để xoáy sâu vào điểm yếu hoặc đẩy tốc độ kỹ năng lên đỉnh.
+        </p>
+        <div id="tomorrowTasksContainer" class="space-y-2">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- 6-MONTH CURRICULUM TREE -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div>
+            <h2 class="font-serif font-bold text-lg text-amber-100">Giáo Trình 6 Tháng — Xóa Tab Số, Lên Nghệ Sĩ</h2>
+            <p class="text-xs text-muted">Chọn Tháng → Tuần → Ngày để vào bài học & trả bài</p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="openAddLessonModal()" class="px-2.5 py-1 rounded-lg bg-walnut hover:bg-stone-800 text-amber-300 border border-amber-700/40 text-xs">
+              + Thêm bài
+            </button>
+            <button onclick="openJsonCurriculumModal()" class="px-2.5 py-1 rounded-lg bg-walnut hover:bg-stone-800 text-parchment border border-stone-700 text-xs">
+              + Nạp JSON
+            </button>
+          </div>
+        </div>
+
+        <!-- Month Selector Tabs (1 to 6) -->
+        <div id="monthTabsContainer" class="grid grid-cols-3 sm:grid-cols-6 gap-1.5 mb-3">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Selected Month Banner -->
+        <div id="monthOverviewBox" class="bg-obsidian p-3 rounded-xl border border-amber-900/40 mb-3">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Week Selector Pills -->
+        <div id="weekTabsContainer" class="flex items-center gap-1.5 overflow-x-auto pb-1 mb-3">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Day Selector Pills -->
+        <div id="dayTabsContainer" class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 border-b border-stone-800">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- ACTIVE DAY LESSON CARDS (New Skill + Daily Check-in + Weekly/Monthly Boss Fight) -->
+        <div id="dayExercisesList" class="space-y-4">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= COLUMN 3: QUICK RECORDER, BACKING TRACK & SKILL EVOLUTION JOURNAL ================= -->
+    <section class="space-y-4">
+
+      <!-- 1. QUICK VOICE RECORDER (PHÒNG THU TRẢ BÀI TẠI CHỖ) -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">🎙 Phòng Thu Trả Bài Nhanh</h2>
+            <p class="text-xs text-muted">Thu lại 30 giây trả bài để tự bắt lỗi rít hơi và trôi nhịp</p>
+          </div>
+          <span id="recTimerBadge" class="font-mono text-xs px-2 py-0.5 rounded bg-obsidian text-stone-400 border border-stone-800">00:00</span>
+        </div>
+
+        <div class="flex items-center gap-2 my-3">
+          <button id="recStartBtn" onclick="startVoiceRecording()" class="flex-1 py-2 px-3 rounded-lg bg-red-900/70 hover:bg-red-800 text-red-100 border border-red-500/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+            <span>●</span> Thu âm trả bài
+          </button>
+          <button id="recStopBtn" onclick="stopVoiceRecording()" disabled class="py-2 px-3 rounded-lg bg-walnut text-stone-500 border border-stone-800 text-xs font-semibold transition">
+            ■ Dừng
+          </button>
+        </div>
+
+        <div id="audioPlaybackWrap" class="hidden bg-obsidian p-2.5 rounded-lg border border-amber-900/40">
+          <p class="text-[11px] text-amber-300 mb-1.5">Bản thu trả bài vừa xong (Nghe kỹ độ tròn tiếng & lỗ số 8):</p>
+          <audio id="recordedAudioEl" controls class="w-full h-8"></audio>
+        </div>
+        <p id="recStatusMsg" class="text-[11px] text-muted mt-1">
+          Mẹo: Đặt kèn cách mic 20–25cm để tiếng ấm và không bị vỡ âm gió.
+        </p>
+      </div>
+
+      <!-- 2. MINI BACKING TRACK STUDIO (SYNTH CHORDS + YOUTUBE EMBED) -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">🎹 Backing Track & Vòng Hòa Âm</h2>
+            <p class="text-xs text-muted">Đệm hợp âm Jazz/Bossa trực tiếp hoặc nhúng YouTube</p>
+          </div>
+          <span id="activeChordDisplay" class="font-mono font-bold text-sm px-2.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-700/40">
+            --
+          </span>
+        </div>
+
+        <!-- Built-in Web Audio Chord Backing Generator (Works 100% offline without YouTube errors) -->
+        <div class="bg-obsidian p-3 rounded-xl border border-stone-800 mb-3">
+          <label class="text-[11px] text-muted block mb-1">CHỌN VÒNG HỢP ÂM ĐỆM TỰ ĐỘNG (WEB AUDIO):</label>
+          <select id="backingProgressionSelect" class="w-full bg-walnut text-xs text-cream px-2.5 py-2 rounded-lg border border-stone-700 mb-2.5">
+            <option value="jazz251">Jazz Standard II-V-I (Dm7 - G7 - Cmaj7 - A7) • Tông C</option>
+            <option value="bossaAm">Bossa Nova Đêm Khuya (Am7 - Dm7 - G7 - Cmaj7)</option>
+            <option value="balladC">Slow Lounge Ballad (Cmaj7 - Am7 - Fmaj7 - G7)</option>
+            <option value="bluesC">Slow Jazz Blues (C7 - F7 - C7 - G7)</option>
+          </select>
+
+          <div class="flex items-center justify-between gap-2">
+            <button id="backingPlayBtn" onclick="toggleSynthBackingTrack()" class="brass-btn flex-1 py-2 px-3 rounded-lg text-xs font-semibold">
+              ▶ Bật Ban Nhạc Đệm
+            </button>
+            <span class="text-[11px] text-muted font-mono">Theo tốc độ BPM</span>
+          </div>
+          <p id="chordScaleHint" class="text-[11px] text-amber-300/90 mt-2">
+            Gợi ý nốt phiêu: Dùng các nốt tự nhiên lỗ 5–8, nhấn nhả nhẹ Slide ở lỗ 6 (Pha#) hoặc lỗ 7 (La#) khi qua hợp âm G7/A7.
+          </p>
+        </div>
+
+        <!-- Optional YouTube Embed -->
+        <details class="text-xs">
+          <summary class="cursor-pointer text-amber-400 hover:underline font-medium">
+            + Mở trình nhúng YouTube Backing Track
+          </summary>
+          <div class="mt-2 space-y-2">
+            <div class="flex gap-1.5">
+              <input id="ytUrlInput" type="text" placeholder="Dán link YouTube (VD: https://www.youtube.com/watch?v=...)" class="flex-1 bg-obsidian text-xs px-2.5 py-1.5 rounded border border-stone-700 text-cream" />
+              <button onclick="loadCustomYoutube()" class="px-2.5 py-1.5 rounded bg-amber-700 text-white text-xs">Mở</button>
+            </div>
+            <div id="ytIframeWrap" class="hidden aspect-video rounded-lg overflow-hidden border border-stone-800 bg-black">
+              <iframe id="ytIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 3. SKILL EVOLUTION LOG (NHẬT KÝ TIẾN HÓA TRƯỚC & SAU) -->
+      <div class="vintage-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="font-serif font-bold text-base text-amber-100">📓 Hành Trình Vượt Ngưỡng (Trước → Sau)</h2>
+            <p class="text-xs text-muted">Bằng chứng thép cho thấy những bài từng làm bạn ngợp giờ đã nằm trong lòng bàn tay</p>
+          </div>
+          <span id="journalTotalBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-walnut text-amber-300">0 ghi chú</span>
+        </div>
+
+        <!-- Filter by Skill Tag -->
+        <div class="flex items-center gap-1.5 mb-3">
+          <select id="journalFilterSelect" onchange="renderSkillEvolutionWall()" class="w-full bg-obsidian text-xs text-parchment px-2.5 py-1.5 rounded-lg border border-stone-800">
+            <option value="ALL">Tất cả kỹ năng (Xem đối chiếu Trước → Sau)</option>
+            <option value="deep-embouchure">Ngậm kèn sâu & Hơi bụng (deep-embouchure)</option>
+            <option value="hole-8-reversal">Đảo chiều hơi lỗ 4, 8, 12 (hole-8-reversal)</option>
+            <option value="sight-reading">Đọc khuông nhạc khóa Sol (sight-reading)</option>
+            <option value="slide-control">Làm chủ nút bấm Slide (slide-control)</option>
+            <option value="throat-vibrato">Rung ngân cổ họng Vibrato (throat-vibrato)</option>
+            <option value="jazz-phrasing">Ngắt câu & Phiêu Backing Track (jazz-phrasing)</option>
+          </select>
+        </div>
+
+        <div id="skillEvolutionList" class="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL 1: ADAPTIVE CHECK-IN & BEFORE/AFTER LOG WHEN TIMER ENDS ================= -->
+  <div id="checkInModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="vintage-card max-w-lg w-full rounded-2xl p-5 border border-amber-500/50 shadow-2xl">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-mono uppercase tracking-wider text-amber-400">🔔 Hết giờ bài tập • Chốt phản xạ</span>
+        <button onclick="closeCheckInModal()" class="text-muted hover:text-white text-sm">✕</button>
+      </div>
+      <h3 id="modalLessonTitle" class="font-serif font-bold text-lg text-amber-100 mb-1">Hoàn thành phiên luyện!</h3>
+      <p class="text-xs text-parchment mb-3">
+        Ghi nhanh cảm giác thật của môi, hơi thở và nhịp điệu ngay lúc này để vài ngày nữa nhìn lại thấy mình đã tiến xa thế nào.
+      </p>
+
+      <!-- Flashback box inside modal if previous note exists for this skillTag -->
+      <div id="modalFlashbackBox" class="hidden mb-3 p-3 rounded-xl bg-amber-950/40 border border-amber-600/40 text-xs">
+        <p class="text-[11px] font-mono uppercase text-amber-400 font-semibold">⏳ Ký ức lần tập trước của kỹ năng này:</p>
+        <p id="modalFlashbackText" class="text-cream italic mt-1"></p>
+      </div>
+
+      <!-- Quick Emotion/Skill Tags -->
+      <div class="mb-2">
+        <span class="text-[11px] text-muted block mb-1.5">Bấm nhanh Tag cảm giác:</span>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="appendTagToNote('#Khá_khoai')" class="px-2 py-0.5 rounded bg-red-950/70 text-red-300 border border-red-700/40 text-[11px]">#Khá_khoai</button>
+          <button type="button" onclick="appendTagToNote('#Rít_hơi_lỗ_8')" class="px-2 py-0.5 rounded bg-red-950/70 text-red-300 border border-red-700/40 text-[11px]">#Rít_hơi_lỗ_8</button>
+          <button type="button" onclick="appendTagToNote('#Dính_lỗ')" class="px-2 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-700/40 text-[11px]">#Dính_lỗ</button>
+          <button type="button" onclick="appendTagToNote('#Trôi_nhịp')" class="px-2 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-700/40 text-[11px]">#Trôi_nhịp</button>
+          <button type="button" onclick="appendTagToNote('#Đã_mượt')" class="px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-700/40 text-[11px]">#Đã_mượt</button>
+          <button type="button" onclick="appendTagToNote('#Không_khó_như_nghĩ')" class="px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-700/40 text-[11px]">#Không_khó_như_nghĩ</button>
+          <button type="button" onclick="appendTagToNote('#Tròn_tiếng')" class="px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-700/40 text-[11px]">#Tròn_tiếng</button>
+        </div>
+      </div>
+
+      <textarea id="checkInNoteInput" rows="3" placeholder="VD: Hôm nay mới tập chuyển lỗ 7 qua 8 còn khựng hơi... (Hoặc: Đã làm xong, thả lỏng hàm cái là qua êm, không khó như mình nghĩ!)" class="w-full bg-obsidian text-xs sm:text-sm text-cream p-3 rounded-xl border border-stone-700 focus:border-amber-500 outline-none mb-4"></textarea>
+
+      <p class="text-xs font-semibold text-amber-200 mb-2">Bạn đã quen và làm chủ được kỹ năng bài này chưa? (Chọn để Thầy giao bài ngày mai):</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <button onclick="submitAdaptiveCheckIn('struggling')" class="p-2.5 rounded-xl bg-red-950/50 hover:bg-red-900/60 border border-red-700/50 text-left transition">
+          <span class="text-xs font-bold text-red-300 block">1. Chưa quen / Còn vấp</span>
+          <span class="text-[11px] text-stone-300">Ngày mai giảm 15 BPM, chia nhỏ câu để củng cố</span>
+        </button>
+        <button onclick="submitAdaptiveCheckIn('comfortable')" class="p-2.5 rounded-xl bg-amber-950/50 hover:bg-amber-900/60 border border-amber-600/50 text-left transition">
+          <span class="text-xs font-bold text-amber-300 block">2. Đã quen tay</span>
+          <span class="text-[11px] text-stone-300">Mở khóa lộ trình chuẩn tiếp theo cho ngày mai</span>
+        </button>
+        <button onclick="submitAdaptiveCheckIn('mastered')" class="p-2.5 rounded-xl bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-600/50 text-left transition">
+          <span class="text-xs font-bold text-emerald-300 block">3. Quá dễ / Bứt tốc</span>
+          <span class="text-[11px] text-stone-300">Giao thử thách nhắm mắt + tăng BPM + thêm Vibrato</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: METRONOME GUIDE ================= -->
+  <div id="metroGuideModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="vintage-card max-w-lg w-full rounded-2xl p-5 border border-amber-600/40 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-serif font-bold text-lg text-amber-100">⏱ Cách Hiểu & Làm Chủ Metronome Cho Kèn Hơi</h3>
+        <button onclick="closeMetronomeGuide()" class="text-muted hover:text-white">✕</button>
+      </div>
+      <div class="space-y-3 text-xs sm:text-sm text-parchment leading-relaxed">
+        <div class="p-3 rounded-xl bg-obsidian border border-stone-800">
+          <p class="font-semibold text-amber-400 mb-1">1. Bản chất BPM (Beats Per Minute) là gì?</p>
+          <p>60 BPM nghĩa là mỗi giây có đúng 1 tiếng "Tách". Đừng coi tiếng click là cái roi đuổi theo bạn; hãy coi nó là **nhịp tim của người đánh bass** đang giữ nền cho bạn thở.</p>
+        </div>
+        <div class="p-3 rounded-xl bg-obsidian border border-stone-800">
+          <p class="font-semibold text-amber-400 mb-1">2. Ba cấp độ ghép hơi thở vào tiếng Click:</p>
+          <ul class="list-disc pl-4 space-y-1.5 mt-1">
+            <li><b>Nốt tròn (Ngân 4 đập):</b> Thổi đúng vào tiếng Click số 1 (đèn cam sáng), giữ luồng hơi bụng phẳng phiu đi qua Click 2, 3, 4 không bị rung đuôi nốt.</li>
+            <li><b>Nốt đen (1 nốt / 1 đập):</b> Mỗi tiếng Click là 1 lần chuyển lỗ hoặc đổi chiều Thổi/Hút. Tuyệt đối không thổi trước tiếng Click.</li>
+            <li><b>Nốt móc đơn (2 nốt / 1 đập - Chia đôi phách):</b> Tiếng Click rơi vào nốt thứ nhất, nốt thứ hai nằm đúng ở khoảng lặng giữa 2 tiếng Click (Đọc nhẩm trong đầu: <i>"Một - và - Hai - và - Ba - và - Bốn - và"</i>).</li>
+          </ul>
+        </div>
+        <div class="p-3 rounded-xl bg-amber-950/30 border border-amber-700/40">
+          <p class="font-semibold text-amber-300 mb-1">3. Quy tắc vàng khi tập kèn Chromatic:</p>
+          <p>Nếu ở 60 BPM bạn còn bị khựng khi chuyển từ lỗ 7 sang lỗ 8 hoặc bấm Slide bị trễ, **tuyệt đối không tăng tốc**. Hãy hạ xuống 50 BPM cho đến khi cơ miệng tự nhảy trúng lỗ trước khi não kịp nghĩ.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 3: ADD CUSTOM LESSON / IMPORT CURRICULUM JSON ================= -->
+  <div id="customLessonModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="vintage-card max-w-lg w-full rounded-2xl p-5 border border-amber-600/40 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="customModalTitle" class="font-serif font-bold text-lg text-amber-100">+ Thêm Bài Tập Mới Vào Ngày Đang Chọn</h3>
+        <button onclick="closeCustomModal()" class="text-muted hover:text-white">✕</button>
+      </div>
+
+      <!-- Form Add Single Lesson -->
+      <div id="addSingleLessonForm" class="space-y-2.5 text-xs">
+        <div>
+          <label class="text-muted block mb-1">Tên bài tập / Kỹ năng:</label>
+          <input id="newTaskTitle" type="text" placeholder="VD: Luyện luyến Slide bài Misty đoạn A" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream" />
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-muted block mb-1">Loại bài:</label>
+            <select id="newTaskType" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream">
+              <option value="lesson">Bài học mới</option>
+              <option value="review">Trả bài</option>
+              <option value="boss">Đúc kết (Boss)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-muted block mb-1">Thời lượng (Phút):</label>
+            <input id="newTaskMinutes" type="number" value="15" min="1" max="120" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream" />
+          </div>
+          <div>
+            <label class="text-muted block mb-1">Metronome BPM:</label>
+            <input id="newTaskBpm" type="number" value="65" min="40" max="200" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream" />
+          </div>
+        </div>
+        <div>
+          <label class="text-muted block mb-1">Nhóm kỹ năng (Để đối chiếu Nhật ký Trước/Sau):</label>
+          <select id="newTaskSkillTag" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream">
+            <option value="deep-embouchure">Ngậm kèn sâu & Hơi bụng</option>
+            <option value="hole-8-reversal">Đảo chiều hơi lỗ 4, 8, 12</option>
+            <option value="sight-reading">Đọc khuông nhạc khóa Sol</option>
+            <option value="slide-control">Làm chủ nút bấm Slide</option>
+            <option value="throat-vibrato">Rung ngân cổ họng Vibrato</option>
+            <option value="jazz-phrasing">Ngắt câu & Phiêu Backing Track</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-muted block mb-1">Hướng dẫn cách tập:</label>
+          <textarea id="newTaskDesc" rows="2" placeholder="Mô tả chi tiết lỗ kèn, hơi thở, nhịp phách..." class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream"></textarea>
+        </div>
+        <div>
+          <label class="text-muted block mb-1">Chú thích: Tập xong bài này sẽ làm được gì & Bước tiếp theo:</label>
+          <input id="newTaskOutcome" type="text" placeholder="VD: Chuyển mượt đoạn điệp khúc không vấp Slide -> Bước tiếp: Ghép beat" class="w-full bg-obsidian p-2.5 rounded-lg border border-stone-700 text-cream" />
+        </div>
+        <button onclick="saveCustomTaskToDay()" class="brass-btn w-full py-2.5 rounded-lg font-semibold mt-2">
+          Lưu Bài Tập Vào Ngày Hiện Tại
+        </button>
+      </div>
+
+      <!-- Form Paste JSON Curriculum -->
+      <div id="pasteJsonCurriculumForm" class="hidden space-y-2.5 text-xs">
+        <p class="text-parchment">Dán gói JSON mở rộng giáo trình để nạp thêm bài tập vào hệ thống:</p>
+        <textarea id="curriculumJsonTextarea" rows="6" placeholder='{"month": 2, "week": 1, "day": 1, "tasks": [...]}' class="w-full bg-obsidian font-mono text-xs p-2.5 rounded-lg border border-stone-700 text-amber-300"></textarea>
+        <button onclick="applyCurriculumJsonPackage()" class="brass-btn w-full py-2.5 rounded-lg font-semibold">
+          Nạp Gói Giáo Trình
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBox" class="fixed bottom-4 right-4 z-50 hidden bg-amber-950 border border-amber-500 text-amber-100 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium"></div>
+
+  <!-- ================= APPLICATION JAVASCRIPT ================= -->
+  <script>
+    /********************************************************************
+     * 1. ACCURATE 12-HOLE CHROMATIC HARMONICA DATA (SOLO TUNING - KEY OF C)
+     * Rule: Holes 1-4 (C4-C5), 5-8 (C5-C6), 9-12 (C6-C7).
+     * Special reversal on Holes 4, 8, 12: Blow = C, Draw = B (Slide Draw = C natural)
+     ********************************************************************/
+    const HARMONICA_12_MAP = [
+      // Octave 1 (Low: Holes 1 - 4)
+      { hole: 1, octave: 1, blow: { note: 'C4', vn: 'Đô trầm', freq: 261.63, staffY: 97, ledger: [97] }, draw: { note: 'D4', vn: 'Rê trầm', freq: 293.66, staffY: 91, ledger: [] }, slideBlow: { note: 'C#4', vn: 'Đô# trầm', freq: 277.18, staffY: 97, ledger: [97], sharp: true }, slideDraw: { note: 'D#4', vn: 'Rê# trầm', freq: 311.13, staffY: 91, ledger: [], sharp: true } },
+      { hole: 2, octave: 1, blow: { note: 'E4', vn: 'Mi trầm', freq: 329.63, staffY: 85, ledger: [] }, draw: { note: 'F4', vn: 'Pha trầm', freq: 349.23, staffY: 79, ledger: [] }, slideBlow: { note: 'F4', vn: 'Pha (trùng hút 2)', freq: 349.23, staffY: 79, ledger: [] }, slideDraw: { note: 'F#4', vn: 'Pha# trầm', freq: 369.99, staffY: 79, ledger: [], sharp: true } },
+      { hole: 3, octave: 1, blow: { note: 'G4', vn: 'Sol trầm', freq: 392.00, staffY: 73, ledger: [] }, draw: { note: 'A4', vn: 'La trầm', freq: 440.00, staffY: 67, ledger: [] }, slideBlow: { note: 'G#4', vn: 'Sol# trầm', freq: 415.30, staffY: 73, ledger: [], sharp: true }, slideDraw: { note: 'Bb4', vn: 'Si giáng (La#)', freq: 466.16, staffY: 67, ledger: [], sharp: true } },
+      { hole: 4, octave: 1, reversed: true, blow: { note: 'C5', vn: 'Đô trung', freq: 523.25, staffY: 55, ledger: [] }, draw: { note: 'B4', vn: 'Si trầm (Đảo hơi)', freq: 493.88, staffY: 61, ledger: [] }, slideBlow: { note: 'C#5', vn: 'Đô# trung', freq: 554.37, staffY: 55, ledger: [], sharp: true }, slideDraw: { note: 'C5', vn: 'Đô (Si# trùng Đô)', freq: 523.25, staffY: 55, ledger: [] } },
+
+      // Octave 2 (Middle Core: Holes 5 - 8)
+      { hole: 5, octave: 2, blow: { note: 'C5', vn: 'Đô trung', freq: 523.25, staffY: 55, ledger: [] }, draw: { note: 'D5', vn: 'Rê trung', freq: 587.33, staffY: 49, ledger: [] }, slideBlow: { note: 'C#5', vn: 'Đô# trung', freq: 554.37, staffY: 55, ledger: [], sharp: true }, slideDraw: { note: 'D#5', vn: 'Rê# trung', freq: 622.25, staffY: 49, ledger: [], sharp: true } },
+      { hole: 6, octave: 2, blow: { note: 'E5', vn: 'Mi trung', freq: 659.25, staffY: 43, ledger: [] }, draw: { note: 'F5', vn: 'Pha trung', freq: 698.46, staffY: 37, ledger: [] }, slideBlow: { note: 'F5', vn: 'Pha (trùng hút 6)', freq: 698.46, staffY: 37, ledger: [] }, slideDraw: { note: 'F#5', vn: 'Pha# trung', freq: 739.99, staffY: 37, ledger: [], sharp: true } },
+      { hole: 7, octave: 2, blow: { note: 'G5', vn: 'Sol trung', freq: 783.99, staffY: 31, ledger: [] }, draw: { note: 'A5', vn: 'La trung', freq: 880.00, staffY: 25, ledger: [25] }, slideBlow: { note: 'G#5', vn: 'Sol# trung', freq: 830.61, staffY: 31, ledger: [], sharp: true }, slideDraw: { note: 'Bb5', vn: 'Si giáng trung', freq: 932.33, staffY: 25, ledger: [25], sharp: true } },
+      { hole: 8, octave: 2, reversed: true, blow: { note: 'C6', vn: 'Đô cao', freq: 1046.50, staffY: 13, ledger: [25, 13] }, draw: { note: 'B5', vn: 'Si trung (Đảo hơi)', freq: 987.77, staffY: 19, ledger: [25] }, slideBlow: { note: 'C#6', vn: 'Đô# cao', freq: 1108.73, staffY: 13, ledger: [25, 13], sharp: true }, slideDraw: { note: 'C6', vn: 'Đô cao (Si#)', freq: 1046.50, staffY: 13, ledger: [25, 13] } },
+
+      // Octave 3 (High: Holes 9 - 12)
+      { hole: 9, octave: 3, blow: { note: 'C6', vn: 'Đô cao', freq: 1046.50, staffY: 13, ledger: [25, 13] }, draw: { note: 'D6', vn: 'Rê cao', freq: 1174.66, staffY: 7, ledger: [25, 13] }, slideBlow: { note: 'C#6', vn: 'Đô# cao', freq: 1108.73, staffY: 13, ledger: [25, 13], sharp: true }, slideDraw: { note: 'D#6', vn: 'Rê# cao', freq: 1244.51, staffY: 7, ledger: [25, 13], sharp: true } },
+      { hole: 10, octave: 3, blow: { note: 'E6', vn: 'Mi cao', freq: 1318.51, staffY: 7, ledger: [25, 13], ottava: true }, draw: { note: 'F6', vn: 'Pha cao', freq: 1396.91, staffY: 7, ledger: [25, 13], ottava: true }, slideBlow: { note: 'F6', vn: 'Pha cao', freq: 1396.91, staffY: 7, ledger: [25, 13], ottava: true }, slideDraw: { note: 'F#6', vn: 'Pha# cao', freq: 1479.98, staffY: 7, ledger: [25, 13], sharp: true, ottava: true } },
+      { hole: 11, octave: 3, blow: { note: 'G6', vn: 'Sol cao', freq: 1567.98, staffY: 7, ledger: [25, 13], ottava: true }, draw: { note: 'A6', vn: 'La cao', freq: 1760.00, staffY: 7, ledger: [25, 13], ottava: true }, slideBlow: { note: 'G#6', vn: 'Sol# cao', freq: 1661.22, staffY: 7, ledger: [25, 13], sharp: true, ottava: true }, slideDraw: { note: 'Bb6', vn: 'Si giáng cao', freq: 1864.66, staffY: 7, ledger: [25, 13], sharp: true, ottava: true } },
+      { hole: 12, octave: 3, reversed: true, blow: { note: 'C7', vn: 'Đô đỉnh', freq: 2093.00, staffY: 7, ledger: [25, 13], ottava: true }, draw: { note: 'B6', vn: 'Si cao (Đảo hơi)', freq: 1975.53, staffY: 7, ledger: [25, 13], ottava: true }, slideBlow: { note: 'C#7', vn: 'Đô# đỉnh', freq: 2217.46, staffY: 7, ledger: [25, 13], sharp: true, ottava: true }, slideDraw: { note: 'C7', vn: 'Đô đỉnh (Si#)', freq: 2093.00, staffY: 7, ledger: [25, 13], ottava: true } }
+    ];
+
+    /********************************************************************
+     * 2. QUOTES & PROVOCATIVE NUDGES
+     ********************************************************************/
+    const JAZZ_QUOTES = [
+      { quote: "Giữa một nốt nhạc và một giọt nước mắt chỉ cách nhau đúng một làn hơi.", author: "Toots Thielemans", nudge: "Cây kèn nằm trong hộp chỉ là cục đồng vô tri. Hoặc cầm nó lên ép hơi bụng 25 phút tối nay để tiếng kèn rền vang dưới ánh đèn vàng, hoặc ngày mai lại tiếp tục nhìn tab số thổi như một cái máy đọc chữ." },
+      { quote: "Harmonica không phải là nhạc cụ bạn đánh bằng tay — nó là phần kéo dài của chính lá phổi và trái tim bạn.", author: "Stevie Wonder", nudge: "Bạn đã có sẵn cột hơi beatbox và cảm nhịp guitar. Thứ duy nhất ngăn bạn thổi ra chất Jazz lạnh lùng như Chet Baker lúc nửa đêm chính là sự trì hoãn ngay lúc này. Mở khóa 15 phút đầu tiên đi!" },
+      { quote: "Đừng thổi nhiều nốt để khoe kỹ thuật. Hãy thổi một nốt dài mà khiến cả căn phòng phải nín thở.", author: "Chet Baker", nudge: "Người chơi nghiệp dư lao vào tập bài khó rồi vấp đĩa. Nghệ sĩ thực thụ dành 10 phút đầu chỉ để thổi một nốt Sol lỗ 7 ấm như rượu vang. Hôm nay bạn chọn làm ai?" },
+      { quote: "Thách thức lớn nhất của Chromatic là biến một thanh trượt kim loại lạnh lẽo thành một giọng hát biết nức nở.", author: "Larry Adler", nudge: "Đồng hồ 90 tiếng đang đứng im nhìn bạn kìa. Chỉ cần 1 phiên 25 phút hôm nay, cái lỗ số 8 từng làm bạn rít hơi sẽ phải ngoan ngoãn nghe lời." }
+    ];
+
+    /********************************************************************
+     * 3. 6-MONTH CURRICULUM GENERATOR (DETAILED MONTH 1 + FULL MONTHS 2-6)
+     ********************************************************************/
+    function buildDefaultCurriculum() {
+      const monthsMeta = [
+        {
+          month: 1,
+          title: "Tháng 1: Xóa Mù Nốt & Ngậm Kèn Sâu",
+          subtitle: "Vứt bỏ hoàn toàn tab số. Làm chủ Deep Embouchure, hơi bụng và thuộc lòng khu vực trung tâm (Lỗ 5–8) trên khuông nhạc khóa Sol.",
+          focusSkill: "deep-embouchure"
+        },
+        {
+          month: 2,
+          title: "Tháng 2: Mở Rộng 3 Quãng Tám & Nhịp Phách",
+          subtitle: "Kết nối mượt từ Quãng trầm (Lỗ 1–4) lên Quãng cao (Lỗ 9–12). Xử lý triệt để điểm gãy đảo hơi ở lỗ 4, 8, 12 với Metronome.",
+          focusSkill: "hole-8-reversal"
+        },
+        {
+          month: 3,
+          title: "Tháng 3: Thuần Hóa Nút Bấm Slide (Thăng/Giáng)",
+          subtitle: "Bấm nút Slide dứt khoát không xì hơi. Chinh phục các giọng Fa trưởng (F), Sol trưởng (G), Rê trưởng (D) trên bản nhạc nốt.",
+          focusSkill: "slide-control"
+        },
+        {
+          month: 4,
+          title: "Tháng 4: Cái Hồn Nghệ Sĩ — Throat Vibrato & Vuốt Nốt",
+          subtitle: "Tạo độ rung ngân cổ họng (Throat Vibrato) ấm áp và kỹ thuật nhấn nhả Slide luyến láy (Grace notes) đặc trưng của Jazz/Ballad.",
+          focusSkill: "throat-vibrato"
+        },
+        {
+          month: 5,
+          title: "Tháng 5: Chơi Có Vibe — Phrasing & Backing Track",
+          subtitle: "Nghệ thuật ngắt câu, thở cùng nhạc nền Bossa Nova / Jazz Standard (Misty, Autumn Leaves, La Vie En Rose).",
+          focusSkill: "jazz-phrasing"
+        },
+        {
+          month: 6,
+          title: "Tháng 6: Cảm Âm Tự Do & Trình Diễn Độc Bản",
+          subtitle: "Nghe giai điệu tự bắt được nốt không cần giấy. Hoàn thiện 3 bản nhạc tủ mang đậm dấu ấn cá nhân.",
+          focusSkill: "jazz-phrasing"
+        }
+      ];
+
+      // Detailed 4 weeks x 7 days for Month 1
+      const m1WeekThemes = [
+        "Tuần 1: Ngậm kèn sâu (Deep Embouchure) & Bản đồ Lỗ 5–7",
+        "Tuần 2: Chinh phục Lỗ số 8 đảo hơi & Chuỗi âm giai Đô trưởng",
+        "Tuần 3: Nhìn Khuông nhạc Khóa Sol — Phản xạ mắt sang môi",
+        "Tuần 4: Nhảy quãng (Intervals) & Giai điệu Ballad không nhìn Tab"
+      ];
+
+      const m1SpecificDays = {
+        "1-1": {
+          lessonTitle: "Ngậm kèn sâu (Deep Embouchure) & Hơi thở cơ hoành lỗ 5–6",
+          skillTag: "deep-embouchure",
+          bpm: 55,
+          minutes: 15,
+          desc: "Há miệng tự nhiên, đặt môi dưới ôm sâu vào đáy vỏ kèn. Tuyệt đối không chúm môi nhỏ ở đầu kèn. Thổi lỗ 5 (Đô) ngân 4 đập Metronome, sau đó Hút lỗ 5 (Rê) 4 đập, rồi trượt nhẹ qua lỗ 6 Thổi (Mi) - Hút (Pha).",
+          outcome: "Tiếng kèn dày, ấm hơn 50%, không bị dính âm lỗ bên cạnh -> Bước tiếp theo: Mở rộng sang lỗ 7 (Sol - La).",
+          reviewTitle: "Kiểm tra độ kín hơi & Độ thả lỏng cơ hàm",
+          reviewDesc: "Thu âm 4 nốt dài Đô - Rê - Mi - Pha ở 55 BPM. Nghe lại xem đầu nốt có bị phập phù hay cuối nốt bị tụt hơi không."
+        },
+        "1-2": {
+          lessonTitle: "Định vị Lỗ 7 (Sol - La) & Điểm gãy đảo hơi Lỗ 8 (Si - Đô)",
+          skillTag: "hole-8-reversal",
+          bpm: 55,
+          minutes: 15,
+          desc: "Tập trung vào sự thay đổi chiều hơi: Lỗ 7 Thổi là Sol, Hút là La. Nhưng khi sang Lỗ 8: HÚT trước là Si (B5), THỔI mới là Đô (C6). Thả lỏng vòm họng khi hút lỗ 8 để không bị rít lưỡi gà.",
+          outcome: "Chuyển từ Lỗ 7 Hút (La) sang Lỗ 8 Hút (Si) liền mạch không khựng -> Bước tiếp theo: Nối trọn vẹn 8 nốt C5–C6.",
+          reviewTitle: "Trả bài phản xạ Lỗ 5 & Lỗ 6 không nhìn kèn",
+          reviewDesc: "Nhắm mắt, bật Metronome 55 BPM, thổi chuỗi Đô - Rê - Mi - Pha - Mi - Rê - Đô liên tục 3 vòng không trượt lỗ."
+        },
+        "1-3": {
+          lessonTitle: "Nối liền mạch Âm giai Đô Trưởng (Lỗ 5 đến Lỗ 8) 1 nốt/đập",
+          skillTag: "hole-8-reversal",
+          bpm: 60,
+          minutes: 15,
+          desc: "Chạy lên: 5 Thổi (Đô) -> 5 Hút (Rê) -> 6 Thổi (Mi) -> 6 Hút (Pha) -> 7 Thổi (Sol) -> 7 Hút (La) -> 8 Hút (Si) -> 8 Thổi (Đô). Sau đó chạy ngược xuống: 8 Thổi -> 8 Hút -> 7 Hút -> 7 Thổi...",
+          outcome: "Cơ miệng tự nhớ quy luật '2 cái Hút liên tiếp' (7 Hút La -> 8 Hút Si) khi đi lên -> Bước tiếp: Ghép với khuông nhạc.",
+          reviewTitle: "Trả bài điểm gãy Lỗ 7 sang Lỗ 8",
+          reviewDesc: "Lặp lại đúng cặp nốt: Sol (7 Thổi) -> La (7 Hút) -> Si (8 Hút) -> Đô (8 Thổi) 10 lần liên tiếp không rít tiếng."
+        },
+        "1-4": {
+          lessonTitle: "Đọc Khuông Nhạc Khóa Sol: 3 nốt trên dòng kẻ (Mi - Sol - Si)",
+          skillTag: "sight-reading",
+          bpm: 60,
+          minutes: 15,
+          desc: "Nhìn lên Bản đồ Khuông nhạc trên web: Dòng kẻ 1/khe 4 là Mi (6 Thổi), Sol (7 Thổi), Si (8 Hút). Tập nhìn vị trí chấm tròn trên 5 dòng kẻ rồi thổi ngay mà KHÔNG nhẩm số lỗ trong đầu.",
+          outcome: "Nhìn thấy nốt trên dòng kẻ là môi tự trượt tới lỗ 6, 7, 8 -> Bước tiếp theo: Học các nốt nằm trong khe (Rê - Pha - La - Đô).",
+          reviewTitle: "Trả bài chạy gam Đô trưởng 60 BPM",
+          reviewDesc: "Bấm thu âm chạy 2 vòng âm giai Đô trưởng lên xuống ở 60 BPM, mỗi nốt đúng 1 tiếng click."
+        },
+        "1-5": {
+          lessonTitle: "Đọc Khuông Nhạc: 4 nốt nằm trong khe (Đô - Rê - Pha - La)",
+          skillTag: "sight-reading",
+          bpm: 60,
+          minutes: 15,
+          desc: "Đối chiếu trên khuông nhạc SVG: Đô trung (5 Thổi), Rê (5 Hút), Pha (6 Hút), La (7 Hút). Tập nhảy bậc qua lại giữa các nốt hút: Rê -> Pha -> La -> Pha -> Rê.",
+          outcome: "Phân biệt rõ cảm giác hơi Hút ở 3 lỗ 5, 6, 7 chỉ bằng mắt nhìn bản nhạc -> Bước tiếp: Ghép bài thực tế.",
+          reviewTitle: "Trả bài 3 nốt dòng kẻ Mi - Sol - Si",
+          reviewDesc: "Thổi chuỗi hợp âm rải Mi (6 Thổi) - Sol (7 Thổi) - Si (8 Hút) - Sol - Mi theo nhịp 3/4 ở 60 BPM."
+        },
+        "1-6": {
+          lessonTitle: "Kiểm soát sắc thái Nặng - Nhẹ (Dynamics Crescendo) trên 1 nốt dài",
+          skillTag: "deep-embouchure",
+          bpm: 55,
+          minutes: 15,
+          desc: "Chọn nốt Sol (Lỗ 7 Thổi). Đập 1 bắt đầu thổi cực nhỏ (pianissimo), đập 2-3 đẩy cơ bụng tăng dần âm lượng lên cực đại, đập 4 thu nhỏ dần về im lặng mà không làm phô cao độ.",
+          outcome: "Làm chủ được độ biểu cảm ấm và sâu như kèn Saxophone -> Bước tiếp: Đúc kết Tuần 1.",
+          reviewTitle: "Trả bài đọc ngẫu nhiên 7 nốt Đô - Si trên khuông nhạc",
+          reviewDesc: "Bấm ngẫu nhiên trên Bản đồ khuông nhạc, nhìn vị trí nốt trên dòng kẻ và thổi đúng cao độ với âm mẫu."
+        },
+        "1-7": {
+          lessonTitle: "🔥 ĐÚC KẾT TUẦN 1 (BOSS FIGHT): Bản Ballad Đầu Tiên Không Tab Số",
+          skillTag: "sight-reading",
+          bpm: 60,
+          minutes: 20,
+          isBoss: true,
+          desc: "Thử thách tổng hợp Tuần 1: Chơi giai điệu mở đầu bài 'La Vie En Rose' (Đô5 - Si - La - Sol - Mi - Đô6 - Si - La - Sol - Mi - Đô5) hoàn toàn bằng cảm nhận vị trí nốt Lỗ 5–8 cùng Metronome 60 BPM và thu âm lại.",
+          outcome: "Chính thức cai nghiện tab số ở quãng trung, tiếng kèn tròn trịa, chuyển lỗ 8 mượt mà -> Mở khóa Tuần 2!",
+          reviewTitle: "Thu âm bản hoàn chỉnh & Ghi nhật ký đối chiếu Tuần 1",
+          reviewDesc: "Bật Phòng thu trả bài, thu trọn vẹn chuỗi âm giai C5-C6 + đoạn nhạc mẫu và tự chấm điểm."
+        }
+      };
+
+      const fullCurriculum = [];
+
+      monthsMeta.forEach((mObj) => {
+        const weeks = [];
+        for (let w = 1; w <= 4; w++) {
+          const days = [];
+          for (let d = 1; d <= 7; d++) {
+            const key = `${w}-${d}`;
+            const isWeeklyBoss = d === 7;
+            const isMonthlyBoss = w === 4 && d === 7;
+
+            if (mObj.month === 1 && m1SpecificDays[key]) {
+              const spec = m1SpecificDays[key];
+              days.push({
+                day: d,
+                tasks: [
+                  {
+                    id: `m1-w${w}-d${d}-main`,
+                    type: spec.isBoss ? 'boss' : 'lesson',
+                    title: spec.lessonTitle,
+                    skillTag: spec.skillTag,
+                    bpm: spec.bpm,
+                    minutes: spec.minutes,
+                    desc: spec.desc,
+                    outcome: spec.outcome
+                  },
+                  {
+                    id: `m1-w${w}-d${d}-rev`,
+                    type: 'review',
+                    title: spec.reviewTitle,
+                    skillTag: spec.skillTag,
+                    bpm: spec.bpm,
+                    minutes: 10,
+                    desc: spec.reviewDesc,
+                    outcome: "Khóa chặt phản xạ cơ miệng của bài hôm trước trước khi sang ngày mới."
+                  }
+                ]
+              });
+            } else {
+              // Structured pedagogical progression for all remaining days across 6 months
+              const baseBpm = 55 + (mObj.month - 1) * 8 + w * 3;
+              const skillPool = ["deep-embouchure", "hole-8-reversal", "sight-reading", "slide-control", "throat-vibrato", "jazz-phrasing"];
+              const daySkill = isWeeklyBoss ? mObj.focusSkill : skillPool[(mObj.month + w + d) % skillPool.length];
+
+              let lessonTitle = "";
+              let desc = "";
+              let outcome = "";
+
+              if (isMonthlyBoss) {
+                lessonTitle = `🏆 ĐÚC KẾT THÁNG ${mObj.month}: Thử Thách Tổng Hợp Toàn Diện`;
+                desc = `Trình diễn liên hoàn kỹ năng trọng tâm của Tháng ${mObj.month} (${mObj.title}) trên nền Backing Track ở tốc độ ${baseBpm} BPM. Yêu cầu thu âm trực tiếp và không nhìn bất kỳ ký hiệu tab số nào.`;
+                outcome = `Làm chủ hoàn toàn cột mốc Tháng ${mObj.month} -> Sẵn sàng bước sang giai đoạn nâng cao tiếp theo!`;
+              } else if (isWeeklyBoss) {
+                lessonTitle = `🔥 ĐÚC KẾT TUẦN ${w} (Tháng ${mObj.month}): Ghép Nhịp & Phản Xạ Thực Chiến`;
+                desc = `Gom toàn bộ các mẫu luyện ngón, hơi thở và đọc nốt của 6 ngày trong Tuần ${w} thành một bài liền mạch ở ${baseBpm} BPM.`;
+                outcome = `Chốt hạ phản xạ Tuần ${w} không còn vấp nhịp -> Bước tiếp theo: Lên tốc độ ở Tuần ${w + 1}.`;
+              } else if (mObj.month === 1) {
+                lessonTitle = `Luyện Phản Xạ Khuông Nhạc & Đảo Hơi Lỗ 5–8 (Tuần ${w} • Ngày ${d})`;
+                desc = `Thực hành đọc nốt khóa Sol nhảy quãng 3 (Đô-Mi, Rê-Pha, Mi-Sol, Pha-La, Sol-Si, La-Đô6) kết hợp giữ hơi bụng đều ở ${baseBpm} BPM.`;
+                outcome = `Tăng tốc độ nhận diện nốt trên 5 dòng kẻ và chuyển lỗ 7–8 êm ái -> Bước tiếp: Tăng 5 BPM vào ngày mai.`;
+              } else if (mObj.month === 2) {
+                lessonTitle = `Kết Nối Quãng Trầm (Lỗ 1–4) & Quãng Trung (Lỗ 5–8) • Ngày ${d}`;
+                desc = `Hạ lỏng xương hàm dưới khi xuống lỗ 1–3 để không bị nghẹt tiếng Đô trầm/Rê trầm. Xử lý điểm đảo hơi ở Lỗ số 4 (Hút Si4, Thổi Đô5) nối liền lên Lỗ 5 ở ${baseBpm} BPM.`;
+                outcome = `Làm chủ âm trầm dày dặn đặc trưng của Jazz Lounge -> Bước tiếp: Mở rộng lên quãng cao 9–12.`;
+              } else if (mObj.month === 3) {
+                lessonTitle = `Thuần Hóa Nút Slide (+1/2 Cung) & Hoá Biểu Thăng/Giáng • Ngày ${d}`;
+                desc = `Luyện bấm đốt giữa ngón trỏ vào cần Slide thật dứt khoát ngay đúng tiếng click Metronome ${baseBpm} BPM. Tập gam Fa trưởng (có Si giáng - Lỗ 3 & 7 Hút bấm Slide) và Sol trưởng (có Pha# - Lỗ 2 & 6 Hút bấm Slide).`;
+                outcome = `Chuyển từ nốt tự nhiên sang nốt bấm Slide mượt như lụa, không bị hụt hơi -> Bước tiếp: Vào các bản Jazz Standard.`;
+              } else if (mObj.month === 4) {
+                lessonTitle = `Kỹ Thuật Throat Vibrato (Rung Cổ Họng) & Luyến Slide • Ngày ${d}`;
+                desc = `Ngân nốt dài 4 phách ở lỗ 6 hoặc 7, sau phách thứ 2 bắt đầu nhấp nhẹ luồng hơi trong cổ họng (như tiếng 'hơ-hơ-hơ' êm ái) theo chu kỳ đều đặn ở ${baseBpm} BPM.`;
+                outcome = `Tiếng kèn có độ ngân rung quyến rũ, thoát hẳn tiếng thổi phẳng lỳ của người mới -> Bước tiếp: Ghép vào câu Ballad.`;
+              } else if (mObj.month === 5) {
+                lessonTitle = `Ngắt Câu (Jazz Phrasing) & Phiêu Cùng Backing Track • Ngày ${d}`;
+                desc = `Bật Ban Nhạc Đệm (Vòng II-V-I hoặc Bossa Nova Am) ở ${baseBpm} BPM. Thổi câu giai điệu có điểm nhấn nhẹ ở phách yếu và chừa khoảng thở tinh tế giữa các hợp âm.`;
+                outcome = `Hoà quyện tiếng kèn vào không gian ban nhạc đêm khuya -> Bước tiếp: Biến tấu giai điệu mang chất riêng.`;
+              } else {
+                lessonTitle = `Cảm Âm Tự Do (Ear Training) & Biểu Diễn Nghệ Sĩ • Ngày ${d}`;
+                desc = `Nghe âm mẫu và vòng hợp âm Backing Track, tự tìm nốt trên kèn trong 3 lần thử. Áp dụng đầy đủ Deep Embouchure, Slide luyến và Throat Vibrato ở ${baseBpm} BPM.`;
+                outcome = `Đạt độ tự do biểu đạt cảm xúc cá nhân trên cây Chromatic 12 lỗ -> Bước tiếp: Hoàn thiện bản thu Master.`;
+              }
+
+              days.push({
+                day: d,
+                tasks: [
+                  {
+                    id: `m${mObj.month}-w${w}-d${d}-main`,
+                    type: (isWeeklyBoss || isMonthlyBoss) ? 'boss' : 'lesson',
+                    title: lessonTitle,
+                    skillTag: daySkill,
+                    bpm: baseBpm,
+                    minutes: isWeeklyBoss ? 20 : 15,
+                    desc: desc,
+                    outcome: outcome
+                  },
+                  {
+                    id: `m${mObj.month}-w${w}-d${d}-rev`,
+                    type: 'review',
+                    title: `Trả Bài Phản Xạ: Kiểm tra không nhìn giấy (Tuần ${w} • Ngày ${d})`,
+                    skillTag: daySkill,
+                    bpm: baseBpm - 5,
+                    minutes: 10,
+                    desc: `Bật Metronome ${baseBpm - 5} BPM và bấm Thu âm trả bài: Chơi lại kỹ năng của buổi trước liền mạch 3 lần không vấp.`,
+                    outcome: `Chứng minh cơ miệng đã thuộc bài trước khi nạp kỹ thuật mới.`
+                  }
+                ]
+              });
+            }
+          }
+          weeks.push({
+            week: w,
+            theme: mObj.month === 1 ? m1WeekThemes[w - 1] : `Tuần ${w}: Đào sâu & Nâng tốc độ kỹ năng Tháng ${mObj.month}`,
+            days: days
+          });
+        }
+        fullCurriculum.push({
+          ...mObj,
+          weeks: weeks
+        });
+      });
+
+      return fullCurriculum;
+    }
+
+    /********************************************************************
+     * 4. APPLICATION STATE & LOCALSTORAGE PERSISTENCE
+     ********************************************************************/
+    const STORAGE_KEY = "CHROMATIC_90H_MASTERY_STATE_V1";
+    const TOTAL_90H_SECONDS = 90 * 3600; // 324,000 seconds
+
+    let appState = {
+      layoutMode: "vertical", // 'vertical' | 'horizontal'
+      remainingSeconds: TOTAL_90H_SECONDS,
+      selectedMonth: 1,
+      selectedWeek: 1,
+      selectedDay: 1,
+      completedTaskIds: [],
+      customDurationMap: {}, // taskId -> minutes
+      tomorrowTasks: [
+        {
+          id: "init-adaptive-1",
+          title: "Khởi động: Kiểm tra điểm đảo hơi Lỗ 7 sang Lỗ 8 (Chậm & Sạch)",
+          bpm: 55,
+          minutes: 10,
+          skillTag: "hole-8-reversal",
+          level: "Mục tiêu mở màn",
+          desc: "Thổi lỗ 7 (Sol) -> Hút lỗ 7 (La) -> Hút lỗ 8 (Si) -> Thổi lỗ 8 (Đô). Lắng nghe xem lỗ 8 hút có bị khựng hơi không.",
+          done: false
+        }
+      ],
+      journalLogs: [
+        {
+          id: "sample-log-1",
+          date: "Khởi điểm",
+          taskId: "m1-w1-d2-main",
+          taskTitle: "Định vị Lỗ 7 (Sol - La) & Điểm gãy đảo hơi Lỗ 8 (Si - Đô)",
+          skillTag: "hole-8-reversal",
+          status: "struggling",
+          note: "Mới tập chuyển từ lỗ 7 hút qua lỗ 8 hút thấy khá khoai, hay bị rít hơi hoặc thổi nhầm chiều. #Khá_khoai #Rít_hơi_lỗ_8"
+        }
+      ],
+      curriculum: buildDefaultCurriculum()
+    };
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = {
+            ...appState,
+            ...parsed,
+            curriculum: parsed.curriculum && parsed.curriculum.length === 6 ? parsed.curriculum : buildDefaultCurriculum()
+          };
+        }
+      } catch (e) {
+        console.warn("Không thể tải dữ liệu cũ, dùng mặc định:", e);
+      }
+    }
+
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn("Lỗi lưu LocalStorage:", e);
+      }
+    }
+
+    /********************************************************************
+     * 5. WEB AUDIO API ENGINE (REED SYNTH, METRONOME, CHIMES, BACKING)
+     ********************************************************************/
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Warm Harmonica Reed tone generator
+    function playHarmonicaTone(freq, duration = 0.85) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+
+        // Sawtooth + Triangle blend mimics brass reed warmth
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(freq, now);
+
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(freq, now);
+        osc2.detune.setValueAtTime(4, now); // Slight natural reed chorus
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 3.2, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.22, now + 0.06);
+        gain.gain.setValueAtTime(0.20, now + duration - 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + duration);
+        osc2.stop(now + duration);
+      } catch (e) {
+        console.warn("Audio error:", e);
+      }
+    }
+
+    // Completion Bell Chime
+    function playCompletionBell() {
+      try {
+        const ctx = getAudioContext();
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+          const now = ctx.currentTime + idx * 0.12;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.6);
+        });
+      } catch (e) {}
+    }
+
+    /********************************************************************
+     * 6. INTERACTIVE 12-HOLE & TREBLE CLEF STAFF MAP
+     ********************************************************************/
+    let mapState = {
+      selectedHole: 5,
+      breath: 'blow', // 'blow' | 'draw'
+      slide: false
+    };
+
+    function setMapBreath(breathType) {
+      mapState.breath = breathType;
+      updateHarmonicaMapUI(true);
+    }
+
+    function toggleMapSlide() {
+      mapState.slide = !mapState.slide;
+      updateHarmonicaMapUI(true);
+    }
+
+    function selectHarmonicaHole(holeNum) {
+      mapState.selectedHole = holeNum;
+      updateHarmonicaMapUI(true);
+    }
+
+    function getActiveNoteObj(holeEntry) {
+      if (mapState.breath === 'blow') {
+        return mapState.slide ? holeEntry.slideBlow : holeEntry.blow;
+      } else {
+        return mapState.slide ? holeEntry.slideDraw : holeEntry.draw;
+      }
+    }
+
+    function updateHarmonicaMapUI(playSound = false) {
+      // Update buttons
+      const blowBtn = document.getElementById('breathBlowBtn');
+      const drawBtn = document.getElementById('breathDrawBtn');
+      const slideBtn = document.getElementById('slideToggleBtn');
+
+      blowBtn.className = mapState.breath === 'blow'
+        ? "px-2.5 py-1 rounded text-xs font-semibold bg-amber-600 text-white shadow"
+        : "px-2.5 py-1 rounded text-xs font-medium bg-walnut text-parchment border border-stone-700";
+
+      drawBtn.className = mapState.breath === 'draw'
+        ? "px-2.5 py-1 rounded text-xs font-semibold bg-sky-700 text-white shadow"
+        : "px-2.5 py-1 rounded text-xs font-medium bg-walnut text-parchment border border-stone-700";
+
+      slideBtn.className = mapState.slide
+        ? "px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500 text-obsidian border border-amber-300 shadow"
+        : "px-2.5 py-1 rounded text-xs font-mono font-medium bg-walnut text-amber-300 border border-amber-700/50";
+      slideBtn.textContent = mapState.slide ? "Slide: GIỮ (+½)" : "Slide: TẮT";
+
+      // Render 12 holes grid
+      const grid = document.getElementById('harmonicaHolesGrid');
+      grid.innerHTML = '';
+
+      HARMONICA_12_MAP.forEach((h) => {
+        const activeNote = getActiveNoteObj(h);
+        const isSelected = h.hole === mapState.selectedHole;
+        const btn = document.createElement('button');
+        btn.className = `p-1.5 rounded-lg border text-center transition flex flex-col items-center justify-center ${
+          isSelected
+            ? 'bg-amber-600 text-white border-amber-300 shadow-lg scale-105'
+            : h.octave === 2
+              ? 'bg-walnut/90 hover:bg-stone-800 text-amber-200 border-amber-700/40'
+              : 'bg-obsidian hover:bg-stone-900 text-parchment border-stone-800'
+        }`;
+        btn.onclick = () => selectHarmonicaHole(h.hole);
+        btn.innerHTML = `
+          <span class="text-[10px] font-mono opacity-75">#${h.hole}${h.reversed ? '*' : ''}</span>
+          <span class="font-bold text-xs mt-0.5">${activeNote.note}</span>
+        `;
+        grid.appendChild(btn);
+      });
+
+      // Selected hole info & Staff SVG
+      const currentHoleObj = HARMONICA_12_MAP.find(h => h.hole === mapState.selectedHole);
+      const noteObj = getActiveNoteObj(currentHoleObj);
+
+      const breathText = mapState.breath === 'blow' ? 'Thổi ↑' : 'Hút ↓';
+      const slideText = mapState.slide ? 'Giữ nút Slide (+1/2 cung)' : 'Không bấm Slide';
+      document.getElementById('selectedNoteTitle').textContent =
+        `Lỗ ${currentHoleObj.hole} • ${breathText} (${slideText}) → ${noteObj.vn} (${noteObj.note})`;
+      document.getElementById('selectedNoteFreq').textContent = `${noteObj.freq} Hz`;
+
+      const warningEl = document.getElementById('holeSpecialWarning');
+      if (currentHoleObj.reversed) {
+        warningEl.textContent = `⚠️ CHÚ Ý ĐẢO CHIỀU HƠI Ở LỖ ${currentHoleObj.hole}: Hút vào là nốt Si (hoặc Đô khi bấm Slide), Thổi ra là nốt Đô!`;
+        warningEl.className = "text-[11px] text-amber-400 font-semibold mt-1";
+      } else {
+        warningEl.textContent = `💡 Mẹo: Nghe kỹ cao độ ${noteObj.note} (${noteObj.freq} Hz) rồi thổi đối chiếu xem hơi bụng đã tròn chưa.`;
+        warningEl.className = "text-[11px] text-muted mt-1";
+      }
+
+      renderNoteOnStaffSVG(noteObj);
+
+      if (playSound) {
+        playHarmonicaTone(noteObj.freq, 0.75);
+      }
+    }
+
+    function renderNoteOnStaffSVG(noteObj) {
+      const group = document.getElementById('svgNoteRenderGroup');
+      const noteX = 190;
+      const noteY = noteObj.staffY;
+      let svgHtml = '';
+
+      // Render ledger lines if any
+      if (noteObj.ledger && noteObj.ledger.length > 0) {
+        noteObj.ledger.forEach(ly => {
+          svgHtml += `<line x1="${noteX - 18}" y1="${ly}" x2="${noteX + 18}" y2="${ly}" stroke="#F59E0B" stroke-width="1.6" />`;
+        });
+      }
+
+      // Sharp symbol if needed
+      if (noteObj.sharp) {
+        svgHtml += `<text x="${noteX - 24}" y="${noteY + 5}" fill="#F59E0B" font-size="18" font-weight="bold">♯</text>`;
+      }
+
+      // 8va indicator for very high octave 3 notes
+      if (noteObj.ottava) {
+        svgHtml += `<text x="${noteX - 15}" y="16" fill="#F59E0B" font-size="11" font-family="monospace">8va---</text>`;
+      }
+
+      // Note head & stem
+      svgHtml += `
+        <ellipse cx="${noteX}" cy="${noteY}" rx="8.5" ry="6" transform="rotate(-18 ${noteX} ${noteY})" fill="#F59E0B" />
+        <line x1="${noteY > 61 ? noteX + 7.5 : noteX - 7.5}" y1="${noteY}" x2="${noteY > 61 ? noteX + 7.5 : noteX - 7.5}" y2="${noteY > 61 ? noteY - 32 : noteY + 32}" stroke="#F59E0B" stroke-width="2" />
+        <text x="${noteX + 24}" y="${noteY + 4}" fill="#F5F5F4" font-size="13" font-family="monospace" font-weight="bold">${noteObj.note} (${noteObj.vn})</text>
+      `;
+
+      group.innerHTML = svgHtml;
+    }
+
+    /********************************************************************
+     * 7. METRONOME ENGINE (WEB AUDIO CLICK + VISUAL BEAT DOTS)
+     ********************************************************************/
+    let metroState = {
+      isPlaying: false,
+      bpm: 60,
+      beatsPerBar: 4,
+      currentBeat: 0,
+      intervalId: null
+    };
+
+    function playMetronomeClick(isDownbeat) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(isDownbeat ? 1150 : 760, now);
+
+        gain.gain.setValueAtTime(isDownbeat ? 0.32 : 0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } catch (e) {}
+    }
+
+    function setBpm(val) {
+      const clean = Math.max(40, Math.min(200, parseInt(val, 10) || 60));
+      metroState.bpm = clean;
+      document.getElementById('bpmSlider').value = clean;
+      document.getElementById('fullBpmValue').textContent = clean;
+      document.getElementById('miniBpmDisplay').textContent = `${clean} BPM`;
+
+      let label = "Andante — Vừa phải, giữ nhịp ổn định";
+      if (clean < 60) label = "Largo — Rất chậm, rèn hơi bụng & soi lỗi";
+      else if (clean < 76) label = "Adagio — Chậm rãi, tập Ballad sâu lắng";
+      else if (clean < 108) label = "Andante / Moderato — Nhịp Bossa Nova thư thái";
+      else label = "Allegro / Swing — Nhịp Jazz linh hoạt";
+      document.getElementById('tempoNameLabel').textContent = label;
+
+      if (metroState.isPlaying) {
+        restartMetronomeInterval();
+      }
+      if (backingState.isPlaying) {
+        restartBackingInterval();
+      }
+    }
+
+    function adjustBpm(delta) {
+      setBpm(metroState.bpm + delta);
+    }
+
+    function loadBpmToMetronome(bpmVal) {
+      setBpm(bpmVal);
+      if (!metroState.isPlaying) {
+        toggleMetronome();
+      }
+      showToast(`Đã nạp ${bpmVal} BPM vào Metronome!`);
+    }
+
+    function changeTimeSignature(beats) {
+      metroState.beatsPerBar = parseInt(beats, 10) || 4;
+      metroState.currentBeat = 0;
+      renderBeatDots(-1);
+    }
+
+    function renderBeatDots(activeBeatIdx) {
+      const container = document.getElementById('miniBeatDots');
+      container.innerHTML = '';
+      for (let i = 0; i < metroState.beatsPerBar; i++) {
+        const dot = document.createElement('span');
+        if (i === activeBeatIdx) {
+          dot.className = i === 0
+            ? "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"
+            : "w-2.5 h-2.5 rounded-full bg-emerald-400";
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-stone-700";
+        }
+        container.appendChild(dot);
+      }
+    }
+
+    function restartMetronomeInterval() {
+      if (metroState.intervalId) clearInterval(metroState.intervalId);
+      const intervalMs = (60 / metroState.bpm) * 1000;
+      metroState.intervalId = setInterval(() => {
+        const isFirst = metroState.currentBeat === 0;
+        playMetronomeClick(isFirst);
+        renderBeatDots(metroState.currentBeat);
+        metroState.currentBeat = (metroState.currentBeat + 1) % metroState.beatsPerBar;
+      }, intervalMs);
+    }
+
+    function toggleMetronome() {
+      metroState.isPlaying = !metroState.isPlaying;
+      const miniBtn = document.getElementById('metroToggleBtn');
+      const mainBtn = document.getElementById('mainMetroBtn');
+
+      if (metroState.isPlaying) {
+        metroState.currentBeat = 0;
+        restartMetronomeInterval();
+        miniBtn.textContent = "■ Dừng";
+        miniBtn.className = "px-2 py-0.5 rounded bg-amber-600 text-white font-semibold";
+        mainBtn.textContent = "■ Dừng Nhịp";
+      } else {
+        if (metroState.intervalId) clearInterval(metroState.intervalId);
+        renderBeatDots(-1);
+        miniBtn.textContent = "▶ Nhịp";
+        miniBtn.className = "px-2 py-0.5 rounded bg-stone-800 hover:bg-amber-700 text-amber-300 font-medium transition";
+        mainBtn.textContent = "▶ Bật Nhịp";
+      }
+    }
+
+    /********************************************************************
+     * 8. 90-HOUR MASTER COUNTDOWN & ACTIVE TASK TIMER
+     ********************************************************************/
+    let timerEngine = {
+      masterRunning: false,
+      freePracticeActive: false,
+      activeTask: null, // { id, title, skillTag, remainingSec, bpm }
+      intervalId: null
+    };
+
+    function formatHMS(totalSeconds) {
+      const sec = Math.max(0, Math.floor(totalSeconds));
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function formatMinSec(totalSeconds) {
+      const sec = Math.max(0, Math.floor(totalSeconds));
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateMasterTimerUI() {
+      const formatted = formatHMS(appState.remainingSeconds);
+      document.getElementById('masterCountdownDisplay').textContent = formatted;
+      document.getElementById('largeCountdownDisplay').textContent = formatted;
+
+      const practicedSec = Math.max(0, TOTAL_90H_SECONDS - appState.remainingSeconds);
+      const ph = Math.floor(practicedSec / 3600);
+      const pm = Math.floor((practicedSec % 3600) / 60);
+      const ps = practicedSec % 60;
+      document.getElementById('accumulatedTimeDisplay').textContent = `${ph}h ${String(pm).padStart(2, '0')}p ${String(ps).padStart(2, '0')}s`;
+
+      const pct = Math.min(100, (practicedSec / TOTAL_90H_SECONDS) * 100).toFixed(2);
+      document.getElementById('masterPercentageBadge').textContent = `${pct}%`;
+      document.getElementById('masterProgressBar').style.width = `${pct}%`;
+
+      const dot = document.getElementById('statusDot');
+      const txt = document.getElementById('statusText');
+      if (timerEngine.masterRunning) {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-amber";
+        txt.textContent = timerEngine.activeTask
+          ? `Đang đếm ngược 90h cùng bài: ${timerEngine.activeTask.title}`
+          : "Đang đếm ngược 90h (Chế độ Tập tự do)";
+        txt.className = "text-emerald-400 font-medium";
+      } else {
+        dot.className = "w-2 h-2 rounded-full bg-stone-600";
+        txt.textContent = "Đang tạm dừng — Chọn 1 bài tập để chạy giờ";
+        txt.className = "text-muted";
+      }
+    }
+
+    function ensureTimerLoop() {
+      if (timerEngine.intervalId) clearInterval(timerEngine.intervalId);
+      timerEngine.intervalId = setInterval(() => {
+        if (!timerEngine.masterRunning) return;
+
+        if (appState.remainingSeconds > 0) {
+          appState.remainingSeconds--;
+        }
+
+        if (timerEngine.activeTask) {
+          timerEngine.activeTask.remainingSec--;
+          document.getElementById('activeTaskTime').textContent = formatMinSec(timerEngine.activeTask.remainingSec);
+          const inlineTimer = document.getElementById(`inline-timer-${timerEngine.activeTask.id}`);
+          if (inlineTimer) {
+            inlineTimer.textContent = formatMinSec(timerEngine.activeTask.remainingSec);
+          }
+
+          if (timerEngine.activeTask.remainingSec <= 0) {
+            const finishedTask = { ...timerEngine.activeTask };
+            stopAllTimers();
+            playCompletionBell();
+            openAdaptiveCheckInModal(finishedTask);
+          }
+        }
+
+        updateMasterTimerUI();
+        saveAppState();
+      }, 1000);
+    }
+
+    function toggleFreePractice() {
+      const btn = document.getElementById('freePracticeBtn');
+      if (timerEngine.freePracticeActive) {
+        timerEngine.freePracticeActive = false;
+        timerEngine.masterRunning = false;
+        btn.textContent = "▶ Tập tự do";
+        btn.className = "px-2 py-0.5 rounded bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/40 text-[11px] font-medium transition";
+      } else {
+        timerEngine.activeTask = null;
+        document.getElementById('activeTaskBanner').classList.add('hidden');
+        timerEngine.freePracticeActive = true;
+        timerEngine.masterRunning = true;
+        ensureTimerLoop();
+        btn.textContent = "⏸ Dừng 90H";
+        btn.className = "px-2 py-0.5 rounded bg-emerald-600 text-white text-[11px] font-semibold transition";
+      }
+      updateMasterTimerUI();
+      renderCurrentDayExercises();
+    }
+
+    function startExerciseTimer(taskId, title, skillTag, defaultMinutes, bpm) {
+      const inputEl = document.getElementById(`min-input-${taskId}`);
+      const chosenMinutes = inputEl ? Math.max(1, parseInt(inputEl.value, 10) || defaultMinutes) : defaultMinutes;
+      appState.customDurationMap[taskId] = chosenMinutes;
+
+      // If switching or resuming
+      if (timerEngine.activeTask && timerEngine.activeTask.id === taskId) {
+        timerEngine.masterRunning = !timerEngine.masterRunning;
+      } else {
+        timerEngine.freePracticeActive = false;
+        document.getElementById('freePracticeBtn').textContent = "▶ Tập tự do";
+        timerEngine.activeTask = {
+          id: taskId,
+          title: title,
+          skillTag: skillTag,
+          bpm: bpm,
+          remainingSec: chosenMinutes * 60
+        };
+        timerEngine.masterRunning = true;
+      }
+
+      const banner = document.getElementById('activeTaskBanner');
+      banner.classList.remove('hidden');
+      banner.classList.add('flex');
+      document.getElementById('activeTaskName').textContent = title;
+      document.getElementById('activeTaskTime').textContent = formatMinSec(timerEngine.activeTask.remainingSec);
+
+      ensureTimerLoop();
+      updateMasterTimerUI();
+      renderCurrentDayExercises();
+    }
+
+    function pauseActiveTask() {
+      timerEngine.masterRunning = !timerEngine.masterRunning;
+      document.getElementById('activeTaskPauseBtn').textContent = timerEngine.masterRunning ? '⏸' : '▶';
+      updateMasterTimerUI();
+      renderCurrentDayExercises();
+    }
+
+    function stopAllTimers() {
+      timerEngine.masterRunning = false;
+      timerEngine.freePracticeActive = false;
+      timerEngine.activeTask = null;
+      document.getElementById('activeTaskBanner').classList.add('hidden');
+      document.getElementById('freePracticeBtn').textContent = "▶ Tập tự do";
+      updateMasterTimerUI();
+      renderCurrentDayExercises();
+    }
+
+    function finishActiveTaskEarly() {
+      if (!timerEngine.activeTask) return;
+      const finished = { ...timerEngine.activeTask };
+      stopAllTimers();
+      playCompletionBell();
+      openAdaptiveCheckInModal(finished);
+    }
+
+    function manualAdjustHours() {
+      const currentHoursLeft = (appState.remainingSeconds / 3600).toFixed(1);
+      const input = prompt(`Nhập số giờ còn lại trong quỹ 90 tiếng (Hiện tại: ${currentHoursLeft} giờ):`, currentHoursLeft);
+      if (input !== null) {
+        const val = parseFloat(input);
+        if (!isNaN(val) && val >= 0 && val <= 90) {
+          appState.remainingSeconds = Math.round(val * 3600);
+          saveAppState();
+          updateMasterTimerUI();
+          showToast("Đã cập nhật quỹ thời gian 90 giờ!");
+        }
+      }
+    }
+
+    /********************************************************************
+     * 9. CURRICULUM RENDERING & BEFORE/AFTER MEMORY FLASHBACK
+     ********************************************************************/
+    function selectMonth(m) {
+      appState.selectedMonth = m;
+      appState.selectedWeek = 1;
+      appState.selectedDay = 1;
+      saveAppState();
+      renderCurriculumAll();
+    }
+
+    function selectWeek(w) {
+      appState.selectedWeek = w;
+      appState.selectedDay = 1;
+      saveAppState();
+      renderCurriculumAll();
+    }
+
+    function selectDay(d) {
+      appState.selectedDay = d;
+      saveAppState();
+      renderCurriculumAll();
+    }
+
+    function getLatestLogForSkill(skillTag) {
+      for (let i = appState.journalLogs.length - 1; i >= 0; i--) {
+        if (appState.journalLogs[i].skillTag === skillTag) {
+          return appState.journalLogs[i];
+        }
+      }
+      return null;
+    }
+
+    function renderCurriculumAll() {
+      const mContainer = document.getElementById('monthTabsContainer');
+      mContainer.innerHTML = '';
+      appState.curriculum.forEach((m) => {
+        const active = m.month === appState.selectedMonth;
+        const btn = document.createElement('button');
+        btn.className = `py-1.5 px-2 rounded-lg text-xs font-semibold border transition ${
+          active
+            ? 'bg-amber-600 text-white border-amber-400 shadow'
+            : 'bg-walnut hover:bg-stone-800 text-parchment border-stone-700'
+        }`;
+        btn.textContent = `Tháng ${m.month}`;
+        btn.onclick = () => selectMonth(m.month);
+        mContainer.appendChild(btn);
+      });
+
+      const currentMonthObj = appState.curriculum.find(m => m.month === appState.selectedMonth) || appState.curriculum[0];
+      document.getElementById('monthOverviewBox').innerHTML = `
+        <h3 class="font-serif font-bold text-sm sm:text-base text-amber-300">${currentMonthObj.title}</h3>
+        <p class="text-xs text-parchment mt-0.5">${currentMonthObj.subtitle}</p>
+      `;
+
+      // Weeks
+      const wContainer = document.getElementById('weekTabsContainer');
+      wContainer.innerHTML = '';
+      currentMonthObj.weeks.forEach((w) => {
+        const active = w.week === appState.selectedWeek;
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap border transition ${
+          active
+            ? 'bg-amber-950 text-amber-300 border-amber-500 font-semibold'
+            : 'bg-obsidian hover:bg-stone-900 text-muted border-stone-800'
+        }`;
+        btn.textContent = `Tuần ${w.week}`;
+        btn.onclick = () => selectWeek(w.week);
+        wContainer.appendChild(btn);
+      });
+
+      const currentWeekObj = currentMonthObj.weeks.find(w => w.week === appState.selectedWeek) || currentMonthObj.weeks[0];
+
+      // Days
+      const dContainer = document.getElementById('dayTabsContainer');
+      dContainer.innerHTML = '';
+      currentWeekObj.days.forEach((d) => {
+        const active = d.day === appState.selectedDay;
+        const allDone = d.tasks.every(t => appState.completedTaskIds.includes(t.id));
+        const isBossDay = d.day === 7;
+        const btn = document.createElement('button');
+        btn.className = `px-2.5 py-1 rounded-lg text-xs font-mono whitespace-nowrap border transition flex items-center gap-1 ${
+          active
+            ? 'bg-amber-500 text-obsidian font-bold border-amber-300'
+            : allDone
+              ? 'bg-emerald-950/60 text-emerald-300 border-emerald-700/50'
+              : 'bg-obsidian hover:bg-stone-900 text-parchment border-stone-800'
+        }`;
+        btn.innerHTML = `${isBossDay ? '🔥 ' : ''}Ngày ${d.day}${allDone ? ' ✔' : ''}`;
+        btn.onclick = () => selectDay(d.day);
+        dContainer.appendChild(btn);
+      });
+
+      renderCurrentDayExercises();
+    }
+
+    function renderCurrentDayExercises() {
+      const currentMonthObj = appState.curriculum.find(m => m.month === appState.selectedMonth) || appState.curriculum[0];
+      const currentWeekObj = currentMonthObj.weeks.find(w => w.week === appState.selectedWeek) || currentMonthObj.weeks[0];
+      const currentDayObj = currentWeekObj.days.find(d => d.day === appState.selectedDay) || currentWeekObj.days[0];
+
+      const listEl = document.getElementById('dayExercisesList');
+      listEl.innerHTML = `
+        <div class="text-xs text-amber-400/90 font-medium mb-1">
+          📌 Chủ đề ${currentWeekObj.theme} — Ngày ${currentDayObj.day}
+        </div>
+      `;
+
+      currentDayObj.tasks.forEach((task) => {
+        const isDone = appState.completedTaskIds.includes(task.id);
+        const isCurrentActive = timerEngine.activeTask && timerEngine.activeTask.id === task.id;
+        const savedMins = appState.customDurationMap[task.id] || task.minutes;
+        const previousLog = getLatestLogForSkill(task.skillTag);
+
+        let badgeHtml = `<span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/50">Bài học / Kỹ năng mới</span>`;
+        if (task.type === 'review') {
+          badgeHtml = `<span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-700/50">🎙 Trả bài phản xạ</span>`;
+        } else if (task.type === 'boss') {
+          badgeHtml = `<span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-600/50">🔥 Đúc kết Tuần / Tháng</span>`;
+        }
+
+        const flashbackHtml = previousLog ? `
+          <div class="mt-2.5 p-2.5 rounded-lg bg-amber-950/35 border border-amber-700/40 text-xs">
+            <div class="flex items-center justify-between text-[11px] text-amber-400 font-mono">
+              <span>⏳ ĐỐI CHIẾU NHẬT KÝ TRƯỚC ĐÂY (${previousLog.date}):</span>
+              <span>#${task.skillTag}</span>
+            </div>
+            <p class="text-parchment italic mt-0.5">"${previousLog.note}"</p>
+          </div>
+        ` : '';
+
+        const card = document.createElement('div');
+        card.className = `p-3.5 rounded-xl border transition ${
+          isCurrentActive
+            ? 'bg-amber-950/30 border-amber-400 shadow-lg'
+            : isDone
+              ? 'bg-obsidian/90 border-emerald-700/50'
+              : 'bg-obsidian border-stone-800'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+            <div class="flex items-center gap-2">
+              ${badgeHtml}
+              ${isDone ? '<span class="text-[11px] text-emerald-400 font-semibold">✔ Đã hoàn thành</span>' : ''}
+            </div>
+            <button onclick="loadBpmToMetronome(${task.bpm})" class="text-[11px] font-mono px-2 py-0.5 rounded bg-walnut hover:bg-amber-700 text-amber-300 hover:text-white border border-amber-700/40 transition">
+              ⏱ Nạp ${task.bpm} BPM
+            </button>
+          </div>
+
+          <h4 class="font-serif font-bold text-base text-amber-100">${task.title}</h4>
+          <p class="text-xs sm:text-sm text-parchment mt-1.5 leading-relaxed">${task.desc}</p>
+
+          <!-- Mandatory Outcome & Next Step Annotation -->
+          <div class="mt-2.5 p-2.5 rounded-lg bg-walnut/70 border-l-2 border-l-amber-500 text-xs">
+            <span class="font-semibold text-amber-300">🎯 Tập xong bài này bạn sẽ đạt được:</span>
+            <p class="text-cream mt-0.5">${task.outcome}</p>
+          </div>
+
+          ${flashbackHtml}
+
+          <!-- Task Timer & Action Controls -->
+          <div class="mt-3 pt-2.5 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5 text-xs">
+              <span class="text-muted">Thời gian tập:</span>
+              <input id="min-input-${task.id}" type="number" min="1" max="120" value="${savedMins}" class="w-14 bg-charcoal text-center font-mono text-amber-300 py-1 rounded border border-stone-700" />
+              <span class="text-muted">phút</span>
+              ${isCurrentActive ? `<span id="inline-timer-${task.id}" class="ml-1 font-mono font-bold text-sm text-amber-400">${formatMinSec(timerEngine.activeTask.remainingSec)}</span>` : ''}
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button onclick="startExerciseTimer('${task.id}', '${task.title.replace(/'/g, "\\'")}', '${task.skillTag}', ${savedMins}, ${task.bpm})" class="brass-btn px-3 py-1.5 rounded-lg text-xs font-semibold">
+                ${isCurrentActive ? (timerEngine.masterRunning ? '⏸ Tạm dừng' : '▶ Tiếp tục') : '▶ Bắt đầu tập (Chạy 90h)'}
+              </button>
+              <button onclick="manualCompleteTask('${task.id}', '${task.title.replace(/'/g, "\\'")}', '${task.skillTag}', ${task.bpm})" class="px-2.5 py-1.5 rounded-lg bg-walnut hover:bg-emerald-900/60 text-emerald-300 border border-emerald-700/40 text-xs font-medium">
+                ✔ Chốt & Ghi Nhật ký
+              </button>
+            </div>
+          </div>
+        `;
+
+        listEl.appendChild(card);
+      });
+    }
+
+    /********************************************************************
+     * 10. ADAPTIVE CHECK-IN MODAL & TOMORROW TASK GENERATOR
+     ********************************************************************/
+    let pendingCheckInTask = null;
+
+    function manualCompleteTask(id, title, skillTag, bpm) {
+      if (timerEngine.activeTask && timerEngine.activeTask.id === id) {
+        stopAllTimers();
+      }
+      openAdaptiveCheckInModal({ id, title, skillTag, bpm });
+    }
+
+    function openAdaptiveCheckInModal(taskObj) {
+      pendingCheckInTask = taskObj;
+      document.getElementById('modalLessonTitle').textContent = taskObj.title;
+      document.getElementById('checkInNoteInput').value = '';
+
+      const prevLog = getLatestLogForSkill(taskObj.skillTag);
+      const fbBox = document.getElementById('modalFlashbackBox');
+      if (prevLog) {
+        fbBox.classList.remove('hidden');
+        document.getElementById('modalFlashbackText').textContent = `[${prevLog.date}] "${prevLog.note}"`;
+      } else {
+        fbBox.classList.add('hidden');
+      }
+
+      document.getElementById('checkInModal').classList.remove('hidden');
+    }
+
+    function closeCheckInModal() {
+      document.getElementById('checkInModal').classList.add('hidden');
+      pendingCheckInTask = null;
+    }
+
+    function appendTagToNote(tag) {
+      const area = document.getElementById('checkInNoteInput');
+      area.value = (area.value ? area.value.trim() + ' ' : '') + tag;
+      area.focus();
+    }
+
+    function submitAdaptiveCheckIn(level) {
+      if (!pendingCheckInTask) return;
+      const rawNote = document.getElementById('checkInNoteInput').value.trim();
+      const defaultMsg = level === 'struggling'
+        ? "Bài này hôm nay còn hơi khựng, mai cần giảm tốc độ tập kỹ lại. #Khá_khoai"
+        : level === 'comfortable'
+          ? "Đã quen tay, chuyển lỗ và giữ hơi khá ổn định. #Đã_mượt"
+          : "Hoàn thành ngon lành, không khó như mình nghĩ! Sẵn sàng tăng độ khó. #Không_khó_như_nghĩ";
+
+      const finalNote = rawNote || defaultMsg;
+      const nowStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+
+      // Mark task completed
+      if (!appState.completedTaskIds.includes(pendingCheckInTask.id)) {
+        appState.completedTaskIds.push(pendingCheckInTask.id);
+      }
+
+      // Save journal entry
+      appState.journalLogs.push({
+        id: 'log-' + Date.now(),
+        date: `Ngày ${nowStr} (T${appState.selectedMonth}-W${appState.selectedWeek}-D${appState.selectedDay})`,
+        taskId: pendingCheckInTask.id,
+        taskTitle: pendingCheckInTask.title,
+        skillTag: pendingCheckInTask.skillTag,
+        status: level,
+        note: finalNote
+      });
+
+      // Generate adaptive task for tomorrow
+      const baseBpm = pendingCheckInTask.bpm || 60;
+      let adaptiveTask = null;
+
+      if (level === 'struggling') {
+        adaptiveTask = {
+          id: 'adapt-' + Date.now(),
+          title: `[Củng cố] Chia nhỏ & Giảm tốc: ${pendingCheckInTask.title}`,
+          bpm: Math.max(45, baseBpm - 15),
+          minutes: 12,
+          skillTag: pendingCheckInTask.skillTag,
+          level: "Củng cố điểm nghẽn",
+          desc: `Hạ Metronome xuống ${Math.max(45, baseBpm - 15)} BPM. Chỉ lấy đúng 3-4 nốt bạn hay bị rít hơi hoặc vấp ngón lặp đi lặp lại thật chậm với hơi bụng sâu.`,
+          done: false
+        };
+      } else if (level === 'comfortable') {
+        adaptiveTask = {
+          id: 'adapt-' + Date.now(),
+          title: `[Duy trì phản xạ] Ôn mượt 1 lượt: ${pendingCheckInTask.title}`,
+          bpm: baseBpm + 5,
+          minutes: 10,
+          skillTag: pendingCheckInTask.skillTag,
+          level: "Tăng nhẹ +5 BPM",
+          desc: `Thổi mượt bài này ở ${baseBpm + 5} BPM ngay đầu buổi tập ngày mai để khóa chặt trí nhớ cơ bắp.`,
+          done: false
+        };
+      } else {
+        adaptiveTask = {
+          id: 'adapt-' + Date.now(),
+          title: `[Bứt tốc Nghệ sĩ] Nhắm mắt + Vibrato: ${pendingCheckInTask.title}`,
+          bpm: Math.min(180, baseBpm + 15),
+          minutes: 15,
+          skillTag: pendingCheckInTask.skillTag,
+          level: "Thử thách Bứt tốc",
+          desc: `Tăng tốc lên ${Math.min(180, baseBpm + 15)} BPM, nhắm mắt hoàn toàn không nhìn kèn và thêm rung ngân Throat Vibrato ở các nốt cuối câu!`,
+          done: false
+        };
+      }
+
+      appState.tomorrowTasks.unshift(adaptiveTask);
+      saveAppState();
+      closeCheckInModal();
+      renderCurriculumAll();
+      renderTomorrowTasks();
+      renderSkillEvolutionWall();
+      showToast("Đã lưu Nhật ký & Giao bài tập thích ứng cho ngày mai!");
+    }
+
+    function renderTomorrowTasks() {
+      const container = document.getElementById('tomorrowTasksContainer');
+      const badge = document.getElementById('adaptiveCountBadge');
+      badge.textContent = `${appState.tomorrowTasks.length} bài`;
+
+      if (appState.tomorrowTasks.length === 0) {
+        container.innerHTML = `<p class="text-xs text-muted italic">Chưa có nhiệm vụ nào. Hãy hoàn thành 1 bài tập bên dưới để Thầy giao bài cho ngày mai.</p>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      appState.tomorrowTasks.slice(0, 5).forEach((t) => {
+        const div = document.createElement('div');
+        div.className = "p-3 rounded-xl bg-obsidian border border-amber-800/40 flex flex-col gap-1.5";
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/40">${t.level}</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="loadBpmToMetronome(${t.bpm})" class="text-[11px] font-mono text-amber-400 hover:underline">⏱ ${t.bpm} BPM</button>
+              <button onclick="removeTomorrowTask('${t.id}')" class="text-xs text-muted hover:text-red-400 ml-1" title="Xóa nhiệm vụ">✕</button>
+            </div>
+          </div>
+          <h4 class="font-semibold text-xs sm:text-sm text-amber-100">${t.title}</h4>
+          <p class="text-xs text-parchment">${t.desc}</p>
+          <div class="flex justify-end mt-1">
+            <button onclick="startExerciseTimer('${t.id}', '${t.title.replace(/'/g, "\\'")}', '${t.skillTag}', ${t.minutes}, ${t.bpm})" class="px-2.5 py-1 rounded bg-amber-600/30 hover:bg-amber-600 text-amber-200 hover:text-white border border-amber-500/40 text-xs font-medium transition">
+              ▶ Tập ngay (${t.minutes}p)
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function removeTomorrowTask(id) {
+      appState.tomorrowTasks = appState.tomorrowTasks.filter(t => t.id !== id);
+      saveAppState();
+      renderTomorrowTasks();
+    }
+
+    /********************************************************************
+     * 11. SKILL EVOLUTION LOG (BEFORE / AFTER COMPARISON WALL)
+     ********************************************************************/
+    function renderSkillEvolutionWall() {
+      const filter = document.getElementById('journalFilterSelect').value;
+      const container = document.getElementById('skillEvolutionList');
+      document.getElementById('journalTotalBadge').textContent = `${appState.journalLogs.length} ghi chú`;
+
+      const filtered = filter === 'ALL'
+        ? [...appState.journalLogs].reverse()
+        : appState.journalLogs.filter(l => l.skillTag === filter).reverse();
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-xs text-muted italic">Chưa có ghi chú nào cho nhóm kỹ năng này.</p>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      filtered.forEach((log) => {
+        const statusBadge = log.status === 'struggling'
+          ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800">Lúc mới tập: Còn khoai</span>'
+          : log.status === 'comfortable'
+            ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">Đã quen tay</span>'
+            : '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700">Vượt ngưỡng: Mượt & Dễ!</span>';
+
+        const item = document.createElement('div');
+        item.className = "p-3 rounded-xl bg-obsidian border border-stone-800 text-xs space-y-1";
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-mono text-[11px] text-amber-400">${log.date}</span>
+            ${statusBadge}
+          </div>
+          <p class="font-semibold text-amber-100">${log.taskTitle}</p>
+          <p class="text-parchment italic">"${log.note}"</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    /********************************************************************
+     * 12. QUICK VOICE RECORDER (MEDIARECORDER API)
+     ********************************************************************/
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recInterval = null;
+    let recSeconds = 0;
+
+    async function startVoiceRecording() {
+      const statusMsg = document.getElementById('recStatusMsg');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          const audioEl = document.getElementById('recordedAudioEl');
+          audioEl.src = url;
+          document.getElementById('audioPlaybackWrap').classList.remove('hidden');
+          stream.getTracks().forEach(t => t.stop());
+        };
+
+        mediaRecorder.start();
+        recSeconds = 0;
+        document.getElementById('recTimerBadge').textContent = "00:00";
+        document.getElementById('recTimerBadge').className = "font-mono text-xs px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-600";
+        recInterval = setInterval(() => {
+          recSeconds++;
+          document.getElementById('recTimerBadge').textContent = formatMinSec(recSeconds);
+        }, 1000);
+
+        document.getElementById('recStartBtn').disabled = true;
+        document.getElementById('recStartBtn').classList.add('opacity-50');
+        const stopBtn = document.getElementById('recStopBtn');
+        stopBtn.disabled = false;
+        stopBtn.className = "py-2 px-3 rounded-lg bg-amber-600 text-white text-xs font-semibold transition";
+        statusMsg.textContent = "🎙 Đang thu âm tiếng kèn của bạn... Hãy giữ hơi bụng đều!";
+      } catch (err) {
+        statusMsg.innerHTML = `<span class="text-amber-400">⚠️ Trình duyệt trong khung nhúng chưa cấp quyền Micro. Hãy tải file HTML này về mở trên Chrome/Edge PC để thu âm 100%.</span>`;
+      }
+    }
+
+    function stopVoiceRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+      if (recInterval) clearInterval(recInterval);
+      document.getElementById('recStartBtn').disabled = false;
+      document.getElementById('recStartBtn').classList.remove('opacity-50');
+      const stopBtn = document.getElementById('recStopBtn');
+      stopBtn.disabled = true;
+      stopBtn.className = "py-2 px-3 rounded-lg bg-walnut text-stone-500 border border-stone-800 text-xs font-semibold transition";
+      document.getElementById('recStatusMsg').textContent = "✔ Đã thu xong! Bấm Play bên trên để nghe lại phần trả bài.";
+    }
+
+    /********************************************************************
+     * 13. WEB AUDIO SYNTH BACKING TRACK & YOUTUBE EMBED
+     ********************************************************************/
+    const CHORD_PROGRESSIONS = {
+      jazz251: [
+        { name: "Dm7", freqs: [293.66, 349.23, 440.00, 523.25] },
+        { name: "G7", freqs: [196.00, 246.94, 293.66, 349.23] },
+        { name: "Cmaj7", freqs: [261.63, 329.63, 392.00, 493.88] },
+        { name: "A7", freqs: [220.00, 277.18, 329.63, 392.00] }
+      ],
+      bossaAm: [
+        { name: "Am7", freqs: [220.00, 261.63, 329.63, 392.00] },
+        { name: "Dm7", freqs: [293.66, 349.23, 440.00, 523.25] },
+        { name: "G7", freqs: [196.00, 246.94, 293.66, 349.23] },
+        { name: "Cmaj7", freqs: [261.63, 329.63, 392.00, 493.88] }
+      ],
+      balladC: [
+        { name: "Cmaj7", freqs: [261.63, 329.63, 392.00, 493.88] },
+        { name: "Am7", freqs: [220.00, 261.63, 329.63, 392.00] },
+        { name: "Fmaj7", freqs: [174.61, 220.00, 261.63, 329.63] },
+        { name: "G7", freqs: [196.00, 246.94, 293.66, 349.23] }
+      ],
+      bluesC: [
+        { name: "C7", freqs: [261.63, 329.63, 392.00, 466.16] },
+        { name: "F7", freqs: [174.61, 220.00, 261.63, 311.13] },
+        { name: "C7", freqs: [261.63, 329.63, 392.00, 466.16] },
+        { name: "G7", freqs: [196.00, 246.94, 293.66, 349.23] }
+      ]
+    };
+
+    let backingState = {
+      isPlaying: false,
+      chordIndex: 0,
+      intervalId: null
+    };
+
+    function playWarmPadChord(freqs, durationSec) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        freqs.forEach((f) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(0.045, now + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + durationSec);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + durationSec);
+        });
+      } catch (e) {}
+    }
+
+    function restartBackingInterval() {
+      if (backingState.intervalId) clearInterval(backingState.intervalId);
+      const barDurationSec = (60 / metroState.bpm) * 2; // 1 chord pluck every 2 beats
+      const playStep = () => {
+        const key = document.getElementById('backingProgressionSelect').value;
+        const list = CHORD_PROGRESSIONS[key] || CHORD_PROGRESSIONS.jazz251;
+        const chord = list[backingState.chordIndex % list.length];
+        document.getElementById('activeChordDisplay').textContent = chord.name;
+        playWarmPadChord(chord.freqs, barDurationSec * 0.95);
+        backingState.chordIndex = (backingState.chordIndex + 1) % list.length;
+      };
+      playStep();
+      backingState.intervalId = setInterval(playStep, barDurationSec * 1000);
+    }
+
+    function toggleSynthBackingTrack() {
+      backingState.isPlaying = !backingState.isPlaying;
+      const btn = document.getElementById('backingPlayBtn');
+      if (backingState.isPlaying) {
+        backingState.chordIndex = 0;
+        restartBackingInterval();
+        btn.textContent = "■ Dừng Ban Nhạc Đệm";
+      } else {
+        if (backingState.intervalId) clearInterval(backingState.intervalId);
+        document.getElementById('activeChordDisplay').textContent = "--";
+        btn.textContent = "▶ Bật Ban Nhạc Đệm";
+      }
+    }
+
+    function loadCustomYoutube() {
+      const raw = document.getElementById('ytUrlInput').value.trim();
+      if (!raw) return;
+      let videoId = "";
+      const match = raw.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+      if (match && match[1]) {
+        videoId = match[1];
+      }
+      if (videoId) {
+        const wrap = document.getElementById('ytIframeWrap');
+        const iframe = document.getElementById('ytIframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        wrap.classList.remove('hidden');
+      } else {
+        showToast("Link YouTube không hợp lệ!");
+      }
+    }
+
+    /********************************************************************
+     * 14. LAYOUT SWITCHER (VERTICAL MONITOR <-> HORIZONTAL 3-COL)
+     ********************************************************************/
+    function applyLayoutMode() {
+      const main = document.getElementById('mainWorkspace');
+      const header = document.getElementById('headerContainer');
+      const sticky = document.getElementById('stickyToolsContainer');
+      const icon = document.getElementById('layoutIcon');
+      const label = document.getElementById('layoutLabel');
+
+      if (appState.layoutMode === 'horizontal') {
+        main.className = "max-w-7xl mx-auto px-4 pt-4 grid grid-cols-1 lg:grid-cols-3 gap-5 transition-all duration-300";
+        header.className = "max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 transition-all duration-300";
+        sticky.className = "max-w-7xl mx-auto mt-2 pt-2 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2 text-xs";
+        icon.textContent = "↔";
+        label.textContent = "Màn Ngang (3 Cột)";
+      } else {
+        main.className = "max-w-xl mx-auto px-3 pt-4 grid grid-cols-1 gap-4 transition-all duration-300";
+        header.className = "max-w-xl mx-auto flex flex-wrap items-center justify-between gap-2 transition-all duration-300";
+        sticky.className = "max-w-xl mx-auto mt-2 pt-2 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2 text-xs";
+        icon.textContent = "↕";
+        label.textContent = "Màn Dọc";
+      }
+    }
+
+    function toggleLayoutMode() {
+      appState.layoutMode = appState.layoutMode === 'vertical' ? 'horizontal' : 'vertical';
+      saveAppState();
+      applyLayoutMode();
+      showToast(appState.layoutMode === 'horizontal' ? "Đã chuyển sang bố cục Màn hình Ngang (3 cột)" : "Đã chuyển sang bố cục Màn hình phụ Dọc");
+    }
+
+    /********************************************************************
+     * 15. QUOTES, MODALS & JSON EXPORT / IMPORT
+     ********************************************************************/
+    let currentQuoteIdx = 0;
+    function cycleQuote() {
+      currentQuoteIdx = (currentQuoteIdx + 1) % JAZZ_QUOTES.length;
+      const q = JAZZ_QUOTES[currentQuoteIdx];
+      document.getElementById('dailyQuoteText').textContent = `"${q.quote}"`;
+      document.getElementById('dailyQuoteAuthor').textContent = `— ${q.author}`;
+      document.getElementById('provocativeNudgeText').textContent = q.nudge;
+    }
+
+    function openMetronomeGuide() {
+      document.getElementById('metroGuideModal').classList.remove('hidden');
+    }
+    function closeMetronomeGuide() {
+      document.getElementById('metroGuideModal').classList.add('hidden');
+    }
+
+    function openAddLessonModal() {
+      document.getElementById('customModalTitle').textContent = `+ Thêm Bài Tập Vào Tháng ${appState.selectedMonth} • Tuần ${appState.selectedWeek} • Ngày ${appState.selectedDay}`;
+      document.getElementById('addSingleLessonForm').classList.remove('hidden');
+      document.getElementById('pasteJsonCurriculumForm').classList.add('hidden');
+      document.getElementById('customLessonModal').classList.remove('hidden');
+    }
+
+    function openJsonCurriculumModal() {
+      document.getElementById('customModalTitle').textContent = "+ Nạp Gói Giáo Trình Mở Rộng (JSON)";
+      document.getElementById('addSingleLessonForm').classList.add('hidden');
+      document.getElementById('pasteJsonCurriculumForm').classList.remove('hidden');
+      document.getElementById('customLessonModal').classList.remove('hidden');
+    }
+
+    function closeCustomModal() {
+      document.getElementById('customLessonModal').classList.add('hidden');
+    }
+
+    function saveCustomTaskToDay() {
+      const title = document.getElementById('newTaskTitle').value.trim();
+      const type = document.getElementById('newTaskType').value;
+      const minutes = parseInt(document.getElementById('newTaskMinutes').value, 10) || 15;
+      const bpm = parseInt(document.getElementById('newTaskBpm').value, 10) || 60;
+      const skillTag = document.getElementById('newTaskSkillTag').value;
+      const desc = document.getElementById('newTaskDesc').value.trim() || "Tập trung giữ hơi bụng đều và bám sát tiếng click Metronome.";
+      const outcome = document.getElementById('newTaskOutcome').value.trim() || "Hoàn thiện kỹ năng và sẵn sàng tăng tốc độ.";
+
+      if (!title) {
+        showToast("Vui lòng nhập tên bài tập!");
+        return;
+      }
+
+      const mObj = appState.curriculum.find(m => m.month === appState.selectedMonth);
+      const wObj = mObj.weeks.find(w => w.week === appState.selectedWeek);
+      const dObj = wObj.days.find(d => d.day === appState.selectedDay);
+
+      dObj.tasks.push({
+        id: 'custom-' + Date.now(),
+        type,
+        title,
+        skillTag,
+        bpm,
+        minutes,
+        desc,
+        outcome
+      });
+
+      saveAppState();
+      closeCustomModal();
+      renderCurrentDayExercises();
+      showToast("Đã thêm bài tập mới vào ngày hôm nay!");
+    }
+
+    function applyCurriculumJsonPackage() {
+      try {
+        const raw = document.getElementById('curriculumJsonTextarea').value.trim();
+        const pkg = JSON.parse(raw);
+        if (pkg.month && pkg.week && pkg.day && Array.isArray(pkg.tasks)) {
+          const mObj = appState.curriculum.find(m => m.month === pkg.month);
+          const wObj = mObj.weeks.find(w => w.week === pkg.week);
+          const dObj = wObj.days.find(d => d.day === pkg.day);
+          dObj.tasks = pkg.tasks;
+          saveAppState();
+          closeCustomModal();
+          renderCurriculumAll();
+          showToast("Đã nạp gói giáo trình JSON thành công!");
+        } else {
+          showToast("Cấu trúc JSON cần có month, week, day và mảng tasks!");
+        }
+      } catch (e) {
+        showToast("Lỗi cú pháp JSON!");
+      }
+    }
+
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `chromatic_90h_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+      showToast("Đã tải file sao lưu JSON về máy!");
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && typeof imported.remainingSeconds === 'number') {
+            appState = { ...appState, ...imported };
+            saveAppState();
+            applyLayoutMode();
+            updateMasterTimerUI();
+            renderCurriculumAll();
+            renderTomorrowTasks();
+            renderSkillEvolutionWall();
+            showToast("Đã khôi phục toàn bộ tiến độ 90h & Nhật ký!");
+          }
+        } catch (err) {
+          showToast("File JSON không hợp lệ!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      setTimeout(() => box.classList.add('hidden'), 3200);
+    }
+
+    /********************************************************************
+     * 16. INITIALIZE ON WINDOW LOAD
+     ********************************************************************/
+    window.onload = function () {
+      loadAppState();
+      // Pick quote of the day
+      const daySeed = new Date().getDate() % JAZZ_QUOTES.length;
+      currentQuoteIdx = daySeed - 1;
+      cycleQuote();
+
+      applyLayoutMode();
+      updateMasterTimerUI();
+      updateHarmonicaMapUI(false);
+      renderBeatDots(-1);
+      renderCurriculumAll();
+      renderTomorrowTasks();
+      renderSkillEvolutionWall();
+    };
+  </script>
+</body>
+</html>
