@@ -632,4 +632,1104 @@
                 drills: [
                   {
                     id: "m4w1d1_a",
-                    type:
+                    type: "BÀI HỌC MỚI",
+                    title: "Lướt Slide đầu nốt kiểu Chet Baker / Toots Thielemans",
+                    minutes: 20,
+                    bpm: 72,
+                    desc: "Bấm giữ Slide ở Lỗ 5 Hút (D#5) trong nửa phách rồi đổi nhanh sang Lỗ 6 Thổi nhả Slide (E5). Lặp lại với Lỗ 6 Hút bấm Slide (F#5) lướt lên Lỗ 7 Thổi (G5).",
+                    target: "Tiếng lướt nửa cung mềm mại, ra đúng màu quán Jazz đêm.",
+                    sequence: [
+                      { hole: 5, action: "draw", slide: true, beats: 1, label: "Lỗ 5 Hút+Slide (D#5)" },
+                      { hole: 6, action: "blow", slide: false, beats: 3, label: "Lỗ 6 Thổi (E5)" },
+                      { hole: 6, action: "draw", slide: true, beats: 1, label: "Lỗ 6 Hút+Slide (F#5)" },
+                      { hole: 7, action: "blow", slide: false, beats: 3, label: "Lỗ 7 Thổi (G5)" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        month: 5,
+        title: "Tháng 5: Thổi Theo Hợp Âm (Arpeggio Dm7 - G7 - Cmaj7) & Cảm Âm",
+        summary: "Hiểu cấu trúc hợp âm II-V-I để kết hợp với cây Guitar ở nhà và bắt đầu tự phiêu những câu ngắn.",
+        weeks: [
+          {
+            week: 1,
+            topic: "Rải hợp âm Dm7 - G7 - Cmaj7 trên khuông nhạc",
+            days: [
+              {
+                day: 1,
+                drills: [
+                  {
+                    id: "m5w1d1_a",
+                    type: "BÀI HỌC MỚI",
+                    title: "Chạy Arpeggio vòng Jazz kinh điển II - V - I (Dm7 - G7 - Cmaj7)",
+                    minutes: 20,
+                    bpm: 80,
+                    desc: "Dm7 (Rê - Fa - La - Đô) -> G7 (Sol - Si - Rê - Fa) -> Cmaj7 (Đô - Mi - Sol - Si).",
+                    target: "Nghe rõ sự chuyển màu của từng hợp âm trên kèn.",
+                    sequence: [
+                      { hole: 5, action: "draw", slide: false, beats: 1, label: "D5 (Dm7)" },
+                      { hole: 6, action: "draw", slide: false, beats: 1, label: "F5" },
+                      { hole: 7, action: "draw", slide: false, beats: 1, label: "A5" },
+                      { hole: 8, action: "blow", slide: false, beats: 1, label: "C6" },
+                      { hole: 7, action: "blow", slide: false, beats: 1, label: "G5 (G7)" },
+                      { hole: 8, action: "draw", slide: false, beats: 1, label: "B5" },
+                      { hole: 6, action: "blow", slide: false, beats: 1, label: "E5 (Cmaj7)" },
+                      { hole: 5, action: "blow", slide: false, beats: 3, label: "C5" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        month: 6,
+        title: "Tháng 6: Hoàn Thiện Repertoire Trình Diễn (Misty, La Vie En Rose, O Pato)",
+        summary: "Ghép toàn bộ kỹ thuật vào các bản Jazz/Bossa Nova hoàn chỉnh, thu âm hoàn thiện và tự tin biểu diễn.",
+        weeks: [
+          {
+            week: 1,
+            topic: "Câu mở đầu La Vie En Rose & Misty đầy biểu cảm",
+            days: [
+              {
+                day: 1,
+                drills: [
+                  {
+                    id: "m6w1d1_a",
+                    type: "BÀI TRẢ BÀI",
+                    title: "Giai điệu chủ đề La Vie En Rose (Rubato & Vibrato)",
+                    minutes: 25,
+                    bpm: 68,
+                    desc: "Thổi câu mở đầu La Vie En Rose trên quãng trung (C6 - B5 - A5 - G5 - E5 - C6...) với sắc thái to nhỏ (Dynamics) rõ rệt.",
+                    target: "Nghe truyền cảm như một bản thu vinyl cổ điển.",
+                    sequence: [
+                      { hole: 8, action: "blow", slide: false, beats: 3, label: "C6 (Đô)" },
+                      { hole: 8, action: "draw", slide: false, beats: 1, label: "B5 (Si)" },
+                      { hole: 7, action: "draw", slide: false, beats: 1, label: "A5 (La)" },
+                      { hole: 7, action: "blow", slide: false, beats: 1, label: "G5 (Sol)" },
+                      { hole: 6, action: "blow", slide: false, beats: 1, label: "E5 (Mi)" },
+                      { hole: 8, action: "blow", slide: false, beats: 3, label: "C6 (Đô)" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    /**************************************************************
+     * 3. TRẠNG THÁI ỨNG DỤNG & LOCAL STORAGE
+     **************************************************************/
+    const STORAGE_KEY = "chromatic_90h_state_v3";
+    const TOTAL_90H_SECONDS = 90 * 3600;
+
+    let appState = {
+      remainingSeconds: TOTAL_90H_SECONDS,
+      layout: "portrait",
+      selectedMonth: 1,
+      selectedWeek: 1,
+      selectedDay: 1,
+      completedDrills: {},
+      customDrills: [],
+      adaptiveQueue: [
+        {
+          id: "warmup_78",
+          title: "Khởi động 3 phút: Nối điểm đảo hơi Lỗ 7 sang Lỗ 8 (Chậm & Sạch)",
+          minutes: 3,
+          bpm: 55,
+          desc: "Thổi Lỗ 7 (Sol) -> Hút Lỗ 7 (La) -> HÚT Lỗ 8 (Si) -> THỔI Lỗ 8 (Đô). Nghe mẫu rồi thổi theo thật êm.",
+          sequence: [
+            { hole: 7, action: "blow", slide: false, beats: 2, label: "Lỗ 7 Thổi (G5)" },
+            { hole: 7, action: "draw", slide: false, beats: 2, label: "Lỗ 7 Hút (A5)" },
+            { hole: 8, action: "draw", slide: false, beats: 2, label: "Lỗ 8 HÚT (B5)" },
+            { hole: 8, action: "blow", slide: false, beats: 4, label: "Lỗ 8 THỔI (C6)" }
+          ]
+        }
+      ],
+      journals: []
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.warn("Không đọc được LocalStorage:", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn("Không lưu được LocalStorage:", e);
+      }
+    }
+
+    /**************************************************************
+     * 4. HỆ THỐNG ÂM THANH WEB AUDIO API (KÈN + METRONOME + DEMO)
+     **************************************************************/
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Mở khóa âm thanh trên iOS / Android ngay lần chạm đầu tiên
+    document.addEventListener("touchstart", () => {
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    }, { passive: true });
+
+    // Phát tiếng kèn Harmonica Chromatic giả lập ấm áp
+    function playHarmonicaTone(freq, durationSec = 0.75) {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, now);
+      masterGain.gain.linearRampToValueAtTime(0.28, now + 0.04);
+      masterGain.gain.setValueAtTime(0.25, now + Math.max(0.05, durationSec - 0.08));
+      masterGain.gain.exponentialRampToValueAtTime(0.0008, now + durationSec);
+
+      // Lọc âm sắc ấm kiểu lưỡi gà đồng
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(freq * 3.2, now);
+
+      const osc1 = ctx.createOscillator();
+      osc1.type = "sawtooth";
+      osc1.frequency.setValueAtTime(freq, now);
+
+      const osc2 = ctx.createOscillator();
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(freq, now);
+
+      // Rung nhẹ (Vibrato) nếu nốt ngân dài
+      if (durationSec >= 0.8) {
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.setValueAtTime(5.2, now);
+        lfoGain.gain.setValueAtTime(3.5, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.frequency);
+        lfo.start(now + 0.25);
+        lfo.stop(now + durationSec);
+      }
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(masterGain);
+      masterGain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + durationSec);
+      osc2.stop(now + durationSec);
+    }
+
+    // Phát tiếng click Metronome
+    function playClickSound(isAccent = false) {
+      const ctx = getAudioCtx();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(isAccent ? 1150 : 780, now);
+      gain.gain.setValueAtTime(isAccent ? 0.35 : 0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    }
+
+    /**************************************************************
+     * 5. BẢN ĐỒ 12 LỖ & KHUÔNG NHẠC TƯƠNG TÁC
+     **************************************************************/
+    let currentHole = 5;
+    let currentBreath = "blow"; // 'blow' | 'draw'
+    let currentSlide = false;
+
+    function getNoteData(holeNum, breath, slide) {
+      const h = CHROMATIC_12_HOLES.find(x => x.hole === holeNum) || CHROMATIC_12_HOLES[4];
+      if (breath === "blow") return slide ? h.blowSlide : h.blow;
+      return slide ? h.drawSlide : h.draw;
+    }
+
+    function setBreathMode(mode) {
+      currentBreath = mode;
+      updateBreathButtonsUI();
+      selectHoleAndPlay(currentHole, true);
+    }
+
+    function toggleSlideMode() {
+      currentSlide = !currentSlide;
+      updateBreathButtonsUI();
+      selectHoleAndPlay(currentHole, true);
+    }
+
+    function updateBreathButtonsUI() {
+      const btnBlow = document.getElementById("btnBreathBlow");
+      const btnDraw = document.getElementById("btnBreathDraw");
+      const btnSlide = document.getElementById("btnSlideToggle");
+
+      btnBlow.className = currentBreath === "blow"
+        ? "btn !min-h-[36px] flex-1 bg-amber-500 text-stone-950 font-bold"
+        : "btn !min-h-[36px] flex-1 bg-stone-800 text-stone-200 border border-stone-700";
+
+      btnDraw.className = currentBreath === "draw"
+        ? "btn !min-h-[36px] flex-1 bg-sky-500 text-stone-950 font-bold"
+        : "btn !min-h-[36px] flex-1 bg-stone-800 text-stone-200 border border-stone-700";
+
+      btnSlide.className = currentSlide
+        ? "btn !min-h-[36px] flex-1 bg-amber-400 text-stone-950 font-bold"
+        : "btn !min-h-[36px] flex-1 bg-stone-800 text-stone-200 border border-stone-700";
+      btnSlide.textContent = currentSlide ? "🔘 Slide: BẬT (+1/2)" : "🔘 Slide: TẮT";
+    }
+
+    function selectHoleAndPlay(holeNum, playSound = true) {
+      currentHole = holeNum;
+      const noteObj = getNoteData(currentHole, currentBreath, currentSlide);
+
+      // Cập nhật dòng mô tả
+      const actionVN = currentBreath === "blow" ? "Thổi ↑" : "Hút ↓";
+      const slideVN = currentSlide ? "Bấm Slide" : "Không Slide";
+      document.getElementById("selectedNoteDesc").textContent =
+        `Lỗ ${currentHole} · ${actionVN} · ${slideVN} → ${noteObj.vn} (${noteObj.note})`;
+      document.getElementById("selectedNoteFreq").textContent = `${noteObj.freq.toFixed(2)} Hz`;
+
+      // Cập nhật khuông nhạc SVG
+      const group = document.getElementById("staffNoteGroup");
+      group.setAttribute("transform", `translate(170, ${noteObj.y})`);
+      document.getElementById("staffNoteLabel").textContent = `${noteObj.note} (${noteObj.vn})`;
+      document.getElementById("ledgerC4").style.display = noteObj.ledger === "C4" ? "block" : "none";
+      document.getElementById("ledgerA5").style.display = noteObj.ledger === "A5" ? "block" : "none";
+
+      renderHolesGrid();
+      if (playSound) playHarmonicaTone(noteObj.freq, 0.7);
+    }
+
+    function renderHolesGrid() {
+      const container = document.getElementById("holesGrid");
+      container.innerHTML = CHROMATIC_12_HOLES.map(h => {
+        const noteObj = getNoteData(h.hole, currentBreath, currentSlide);
+        const isSelected = h.hole === currentHole;
+        const specialBadge = h.special ? `<span class="text-[9px] text-rose-300 font-bold">★Đảo</span>` : "";
+        return `
+          <button onclick="selectHoleAndPlay(${h.hole}, true)"
+            class="flex flex-col items-center justify-center p-2 rounded-xl border text-center transition ${
+              isSelected
+                ? "bg-amber-500 text-stone-950 border-amber-200 font-black shadow-lg"
+                : "bg-stone-900/90 text-stone-200 border-stone-700 hover:border-amber-600"
+            }">
+            <span class="text-[10px] opacity-80">Lỗ ${h.hole} ${specialBadge}</span>
+            <span class="text-sm font-extrabold mt-0.5">${noteObj.note}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    /**************************************************************
+     * 6. TRÌNH PHÁT MẪU BÀI TẬP TRỰC QUAN (NGHE MẪU & LOOP)
+     **************************************************************/
+    let activeDemoTimeoutIds = [];
+    let activeDemoDrillId = null;
+    let isDemoLooping = false;
+
+    function stopDemoPlayback() {
+      activeDemoTimeoutIds.forEach(id => clearTimeout(id));
+      activeDemoTimeoutIds = [];
+      activeDemoDrillId = null;
+      document.querySelectorAll(".note-pill").forEach(el => el.classList.remove("active-demo"));
+      document.querySelectorAll(".btn-demo-play").forEach(btn => {
+        btn.innerHTML = "🔊 ▶ Nghe mẫu bài này";
+        btn.classList.remove("bg-rose-600", "text-white");
+        btn.classList.add("bg-amber-500", "text-stone-950");
+      });
+      document.querySelectorAll(".demo-status-banner").forEach(el => {
+        el.textContent = "Bấm 'Nghe mẫu bài này' để nghe 4 phách đếm nhịp rồi thổi theo từng nốt sáng đèn.";
+      });
+    }
+
+    function toggleDemoLoop(drillId) {
+      isDemoLooping = !isDemoLooping;
+      document.querySelectorAll(".btn-demo-loop").forEach(btn => {
+        btn.textContent = isDemoLooping ? "🔁 Loop: BẬT" : "🔁 Loop: TẮT";
+        btn.className = isDemoLooping
+          ? "btn-demo-loop btn !min-h-[36px] !px-3 !text-xs bg-amber-400 text-stone-950 font-bold"
+          : "btn-demo-loop btn !min-h-[36px] !px-3 !text-xs bg-stone-800 border border-stone-600 text-stone-200";
+      });
+    }
+
+    function findDrillById(drillId) {
+      for (const t of appState.adaptiveQueue) {
+        if (t.id === drillId) return t;
+      }
+      for (const m of CURRICULUM) {
+        for (const w of m.weeks) {
+          for (const d of w.days) {
+            for (const dr of d.drills) {
+              if (dr.id === drillId) return dr;
+            }
+          }
+        }
+      }
+      for (const c of appState.customDrills) {
+        if (c.id === drillId) return c;
+      }
+      return null;
+    }
+
+    // Bấm nghe lẻ 1 ô nốt trong ví dụ
+    function playSingleSequenceStep(hole, action, slide) {
+      currentHole = hole;
+      currentBreath = action;
+      currentSlide = slide;
+      updateBreathButtonsUI();
+      selectHoleAndPlay(hole, true);
+    }
+
+    // Phát toàn bộ chuỗi bài mẫu có đếm nhịp 1-2-3-4
+    function playDrillDemo(drillId) {
+      if (activeDemoDrillId === drillId) {
+        stopDemoPlayback();
+        return;
+      }
+      stopDemoPlayback();
+
+      const drill = findDrillById(drillId);
+      if (!drill || !drill.sequence || drill.sequence.length === 0) return;
+
+      activeDemoDrillId = drillId;
+      const bpm = drill.bpm || 60;
+      const beatMs = (60 / bpm) * 1000;
+
+      // Đổi trạng thái nút
+      const playBtn = document.getElementById(`btnDemo_${drillId}`);
+      const statusEl = document.getElementById(`demoStatus_${drillId}`);
+      if (playBtn) {
+        playBtn.innerHTML = "⏹ Dừng nghe mẫu";
+        playBtn.classList.remove("bg-amber-500", "text-stone-950");
+        playBtn.classList.add("bg-rose-600", "text-white");
+      }
+
+      let elapsedMs = 0;
+
+      // 4 tiếng click đếm nhịp chuẩn bị
+      for (let i = 1; i <= 4; i++) {
+        const tId = setTimeout(() => {
+          playClickSound(i === 1);
+          if (statusEl) statusEl.textContent = `🥁 Đếm nhịp chuẩn bị vào bài (${bpm} BPM): Phách ${i} / 4...`;
+        }, elapsedMs);
+        activeDemoTimeoutIds.push(tId);
+        elapsedMs += beatMs;
+      }
+
+      // Phát từng nốt trong sequence kèm tiếng click phách
+      drill.sequence.forEach((step, idx) => {
+        const stepDurationMs = (step.beats || 2) * beatMs;
+        const stepDurationSec = stepDurationMs / 1000;
+
+        // Tiếng click mỗi phách trong khi ngân nốt
+        for (let b = 0; b < (step.beats || 2); b++) {
+          const clickId = setTimeout(() => {
+            playClickSound(b === 0);
+          }, elapsedMs + b * beatMs);
+          activeDemoTimeoutIds.push(clickId);
+        }
+
+        const noteId = setTimeout(() => {
+          // Làm sáng ô nốt hiện tại
+          document.querySelectorAll(`.seq-pill-${drillId}`).forEach(el => el.classList.remove("active-demo"));
+          const pill = document.getElementById(`seqPill_${drillId}_${idx}`);
+          if (pill) pill.classList.add("active-demo");
+
+          // Cập nhật lên bản đồ 12 lỗ & khuông nhạc khóa Sol
+          currentHole = step.hole;
+          currentBreath = step.action;
+          currentSlide = !!step.slide;
+          updateBreathButtonsUI();
+          selectHoleAndPlay(step.hole, false);
+
+          const noteObj = getNoteData(step.hole, step.action, !!step.slide);
+          playHarmonicaTone(noteObj.freq, Math.max(0.35, stepDurationSec * 0.92));
+
+          if (statusEl) {
+            const actText = step.action === "blow" ? "THỔI ↑" : "HÚT ↓";
+            const sldText = step.slide ? " + Bấm Slide" : "";
+            statusEl.textContent = `🎵 Đang phát: Lỗ ${step.hole} (${actText}${sldText}) → ${noteObj.note} (${noteObj.vn}) · Ngân ${step.beats} đập`;
+          }
+        }, elapsedMs);
+
+        activeDemoTimeoutIds.push(noteId);
+        elapsedMs += stepDurationMs;
+      });
+
+      // Kết thúc hoặc Lặp lại (Loop)
+      const endId = setTimeout(() => {
+        if (isDemoLooping && activeDemoDrillId === drillId) {
+          activeDemoDrillId = null;
+          playDrillDemo(drillId);
+        } else {
+          stopDemoPlayback();
+        }
+      }, elapsedMs + 250);
+      activeDemoTimeoutIds.push(endId);
+    }
+
+    /**************************************************************
+     * 7. ĐỒNG HỒ ĐẾM NGƯỢC 90 GIỜ & ĐỒNG HỒ BÀI TẬP
+     **************************************************************/
+    let activeDrillObj = null;
+    let sessionRemainingSec = 15 * 60;
+    let timerInterval = null;
+
+    function formatHMS(totalSec) {
+      const s = Math.max(0, Math.floor(totalSec));
+      const hrs = Math.floor(s / 3600);
+      const mins = Math.floor((s % 3600) / 60);
+      const secs = s % 60;
+      return `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function formatMMSS(totalSec) {
+      const s = Math.max(0, Math.floor(totalSec));
+      const mins = Math.floor(s / 60);
+      const secs = s % 60;
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function updateTimersUI() {
+      const hms = formatHMS(appState.remainingSeconds);
+      document.getElementById("masterCountdown").textContent = hms;
+      document.getElementById("topMasterTimer").textContent = hms;
+
+      const practiced = Math.max(0, TOTAL_90H_SECONDS - appState.remainingSeconds);
+      const pH = Math.floor(practiced / 3600);
+      const pM = Math.floor((practiced % 3600) / 60);
+      const pS = practiced % 60;
+      document.getElementById("practicedTime").textContent = `${pH}h ${String(pM).padStart(2, "0")}p ${String(pS).padStart(2, "0")}s`;
+
+      const mmss = formatMMSS(sessionRemainingSec);
+      document.getElementById("sessionCountdown").textContent = mmss;
+      document.getElementById("activeDrillTime").textContent = mmss;
+    }
+
+    function startPracticeDrill(drillId) {
+      const drill = findDrillById(drillId);
+      if (!drill) return;
+
+      activeDrillObj = drill;
+      const mins = drill.minutes || 15;
+      document.getElementById("customMinutesInput").value = mins;
+      sessionRemainingSec = mins * 60;
+
+      document.getElementById("currentSessionTitle").textContent = `Đang tập: ${drill.title}`;
+      document.getElementById("activeDrillName").textContent = drill.title;
+      document.getElementById("activeDrillBar").classList.remove("hidden");
+      document.getElementById("activeDrillBar").classList.add("flex");
+
+      if (drill.bpm) changeBpm(drill.bpm);
+
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      toggleDrillTimer(); // Tự động chạy luôn
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateCustomMinutes(val) {
+      const m = Math.max(1, Math.min(120, parseInt(val, 10) || 15));
+      sessionRemainingSec = m * 60;
+      updateTimersUI();
+    }
+
+    function toggleDrillTimer() {
+      const btn = document.getElementById("btnStartPauseSession");
+      const quickBtn = document.getElementById("btnQuickPause");
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.innerHTML = "▶ Tiếp tục";
+        quickBtn.textContent = "▶";
+        saveState();
+      } else {
+        if (!activeDrillObj) {
+          activeDrillObj = findDrillById("m1w1d1_a");
+          document.getElementById("currentSessionTitle").textContent = `Đang tập: ${activeDrillObj.title}`;
+        }
+        btn.innerHTML = "⏸ Tạm dừng";
+        quickBtn.textContent = "⏸";
+
+        timerInterval = setInterval(() => {
+          if (sessionRemainingSec > 0) {
+            sessionRemainingSec--;
+            if (appState.remainingSeconds > 0) appState.remainingSeconds--;
+            updateTimersUI();
+            if (sessionRemainingSec % 5 === 0) saveState();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btn.innerHTML = "▶ Bắt đầu";
+            playHarmonicaTone(523.25, 0.3);
+            setTimeout(() => playHarmonicaTone(659.25, 0.3), 320);
+            setTimeout(() => playHarmonicaTone(783.99, 0.6), 650);
+            saveState();
+            finishCurrentDrillPrompt();
+          }
+        }, 1000);
+      }
+    }
+
+    /**************************************************************
+     * 8. METRONOME ĐỘC LẬP
+     **************************************************************/
+    let currentBpm = 60;
+    let metroInterval = null;
+    let currentBeat = 0;
+
+    function changeBpm(val) {
+      currentBpm = Math.max(40, Math.min(160, parseInt(val, 10) || 60));
+      document.getElementById("bpmValueDisplay").textContent = currentBpm;
+      document.getElementById("topBpmText").textContent = currentBpm;
+      document.getElementById("bpmSlider").value = currentBpm;
+
+      if (metroInterval) {
+        clearInterval(metroInterval);
+        startMetroLoop();
+      }
+    }
+
+    function startMetroLoop() {
+      const intervalMs = (60 / currentBpm) * 1000;
+      currentBeat = 0;
+      metroInterval = setInterval(() => {
+        const isAccent = currentBeat % 4 === 0;
+        playClickSound(isAccent);
+        const dots = document.getElementById("beatDots").children;
+        for (let i = 0; i < 4; i++) {
+          dots[i].className = i === (currentBeat % 4)
+            ? (isAccent ? "w-3 h-3 rounded-full bg-amber-400" : "w-2.5 h-2.5 rounded-full bg-emerald-400")
+            : "w-2.5 h-2.5 rounded-full bg-stone-700";
+        }
+        currentBeat++;
+      }, intervalMs);
+    }
+
+    function toggleMetronome() {
+      const btn = document.getElementById("btnMetroToggle");
+      const topBtn = document.getElementById("btnTopMetro");
+      if (metroInterval) {
+        clearInterval(metroInterval);
+        metroInterval = null;
+        btn.innerHTML = "▶ Bật Nhịp";
+        btn.className = "btn bg-amber-500 text-stone-950 font-bold px-4";
+        topBtn.classList.remove("bg-amber-500", "text-stone-950");
+      } else {
+        startMetroLoop();
+        btn.innerHTML = "⏹ Dừng Nhịp";
+        btn.className = "btn bg-rose-600 text-white font-bold px-4";
+        topBtn.classList.add("bg-amber-500", "text-stone-950");
+      }
+    }
+
+    /**************************************************************
+     * 9. RENDER GIÁO TRÌNH & KHUNG VÍ DỤ NGHE MẪU
+     **************************************************************/
+    function selectMonth(m) {
+      appState.selectedMonth = m;
+      appState.selectedWeek = 1;
+      appState.selectedDay = 1;
+      saveState();
+      renderCurriculum();
+    }
+
+    function selectWeek(w) {
+      appState.selectedWeek = w;
+      appState.selectedDay = 1;
+      saveState();
+      renderCurriculum();
+    }
+
+    function selectDay(d) {
+      appState.selectedDay = d;
+      saveState();
+      renderCurriculum();
+    }
+
+    function renderSequenceBox(drill) {
+      if (!drill.sequence || drill.sequence.length === 0) return "";
+
+      const pillsHtml = drill.sequence.map((step, idx) => {
+        const noteObj = getNoteData(step.hole, step.action, !!step.slide);
+        const arrow = step.action === "blow" ? "↑Thổi" : "↓Hút";
+        const slideTag = step.slide ? " +Slide" : "";
+        return `
+          <button type="button" id="seqPill_${drill.id}_${idx}"
+            onclick="playSingleSequenceStep(${step.hole}, '${step.action}', ${!!step.slide})"
+            class="note-pill seq-pill-${drill.id}">
+            <span class="text-[10px] text-amber-300 font-semibold">Lỗ ${step.hole} (${arrow}${slideTag})</span>
+            <span class="text-sm font-black text-white my-0.5">${noteObj.note}</span>
+            <span class="text-[10px] text-stone-400">${step.beats} đập</span>
+          </button>
+        `;
+      }).join("");
+
+      return `
+        <div class="bg-[#140e0a] border border-amber-800/50 rounded-xl p-2.5 mt-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-amber-300">🎧 Ví dụ Nghe Mẫu & Thổi Theo (Bấm từng nốt hoặc phát cả câu):</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="btnDemo_${drill.id}" onclick="playDrillDemo('${drill.id}')"
+                class="btn-demo-play btn !min-h-[36px] !px-3 !text-xs bg-amber-500 text-stone-950 font-bold">
+                🔊 ▶ Nghe mẫu bài này
+              </button>
+              <button type="button" onclick="toggleDemoLoop('${drill.id}')"
+                class="btn-demo-loop btn !min-h-[36px] !px-2.5 !text-xs bg-stone-800 border border-stone-600 text-stone-200">
+                🔁 Loop: TẮT
+              </button>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-1.5 my-1.5">${pillsHtml}</div>
+          <div id="demoStatus_${drill.id}" class="demo-status-banner text-[11px] text-amber-200/80 mt-1.5">
+            Bấm "Nghe mẫu bài này" để nghe 4 phách đếm nhịp rồi thổi theo từng nốt sáng đèn.
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCurriculum() {
+      // Tháng
+      const monthTabs = document.getElementById("monthTabs");
+      monthTabs.innerHTML = CURRICULUM.map(m => `
+        <button onclick="selectMonth(${m.month})"
+          class="btn !min-h-[36px] !px-3 !py-1 !text-xs ${
+            appState.selectedMonth === m.month
+              ? "bg-amber-500 text-stone-950 font-bold"
+              : "bg-stone-900 border border-stone-700 text-stone-300"
+          }">
+          Tháng ${m.month}
+        </button>
+      `).join("");
+
+      const monthObj = CURRICULUM.find(m => m.month === appState.selectedMonth) || CURRICULUM[0];
+      document.getElementById("monthSummaryBox").innerHTML = `
+        <div class="font-bold text-amber-300 mb-0.5">${monthObj.title}</div>
+        <div>${monthObj.summary}</div>
+      `;
+
+      // Tuần
+      const weekTabs = document.getElementById("weekTabs");
+      weekTabs.innerHTML = monthObj.weeks.map(w => `
+        <button onclick="selectWeek(${w.week})"
+          class="btn !min-h-[34px] !px-3 !py-1 !text-xs ${
+            appState.selectedWeek === w.week
+              ? "bg-amber-700 text-white font-bold"
+              : "bg-stone-900 border border-stone-800 text-stone-400"
+          }">
+          Tuần ${w.week}
+        </button>
+      `).join("");
+
+      const weekObj = monthObj.weeks.find(w => w.week === appState.selectedWeek) || monthObj.weeks[0];
+
+      // Ngày
+      const dayTabs = document.getElementById("dayTabs");
+      dayTabs.innerHTML = weekObj.days.map(d => `
+        <button onclick="selectDay(${d.day})"
+          class="btn !min-h-[34px] !px-3 !py-1 !text-xs ${
+            appState.selectedDay === d.day
+              ? "bg-amber-500/20 border border-amber-500 text-amber-300 font-bold"
+              : "bg-stone-900 border border-stone-800 text-stone-400"
+          }">
+          Ngày ${d.day}
+        </button>
+      `).join("");
+
+      const dayObj = weekObj.days.find(d => d.day === appState.selectedDay) || weekObj.days[0];
+
+      // Danh sách bài tập
+      const listEl = document.getElementById("drillsListContainer");
+      const allDrills = [...dayObj.drills, ...appState.customDrills.filter(c => c.month === monthObj.month)];
+
+      listEl.innerHTML = allDrills.map(drill => {
+        const isDone = !!appState.completedDrills[drill.id];
+        return `
+          <div class="bg-stone-950/90 border ${isDone ? "border-emerald-700/70" : "border-stone-800"} rounded-xl p-3">
+            <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/50">
+                ${drill.type || "BÀI TẬP"} · ${drill.bpm || 60} BPM
+              </span>
+              <span class="text-xs font-mono text-stone-400">⏱ ${drill.minutes} phút ${isDone ? "· ✅ Đã tập" : ""}</span>
+            </div>
+
+            <h3 class="text-sm font-bold text-white mb-1">${drill.title}</h3>
+            <p class="text-xs text-stone-300 leading-relaxed">${drill.desc}</p>
+            ${drill.target ? `<div class="text-[11px] text-emerald-300 mt-1.5">🎯 Tiêu chuẩn qua bài: ${drill.target}</div>` : ""}
+
+            ${renderSequenceBox(drill)}
+
+            <div class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-stone-800/80">
+              <button onclick="startPracticeDrill('${drill.id}')" class="btn !min-h-[38px] flex-1 bg-amber-500 text-stone-950 font-bold text-xs">
+                ▶ Tập ngay (${drill.minutes}p)
+              </button>
+              <button onclick="playDrillDemo('${drill.id}')" class="btn !min-h-[38px] bg-stone-800 border border-amber-600/60 text-amber-300 text-xs">
+                🔊 Nghe mẫu
+              </button>
+              <button onclick="openCompleteModal('${drill.id}')" class="btn !min-h-[38px] bg-emerald-800/80 border border-emerald-600/50 text-emerald-100 text-xs">
+                ✔ Chốt & Ghi Nhật ký
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderAdaptiveTasks() {
+      const container = document.getElementById("adaptiveTasksContainer");
+      if (!appState.adaptiveQueue || appState.adaptiveQueue.length === 0) {
+        container.innerHTML = `<p class="text-xs text-stone-400">Chưa có nhiệm vụ thích ứng nào. Hãy bấm "Chốt & Ghi Nhật ký" sau khi tập xong 1 bài!</p>`;
+        return;
+      }
+
+      container.innerHTML = appState.adaptiveQueue.map(task => `
+        <div class="bg-stone-950/90 border border-amber-700/50 rounded-xl p-3">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="font-bold text-amber-300">${task.title}</span>
+            <span class="text-stone-400">${task.minutes || 5}p · ${task.bpm || 60} BPM</span>
+          </div>
+          <p class="text-xs text-stone-300">${task.desc}</p>
+          ${renderSequenceBox(task)}
+          <div class="flex flex-wrap gap-2 mt-2.5">
+            <button onclick="startPracticeDrill('${task.id}')" class="btn !min-h-[36px] !text-xs bg-amber-500 text-stone-950 font-bold">
+              ▶ Tập ngay (${task.minutes || 5}p)
+            </button>
+            <button onclick="openCompleteModal('${task.id}')" class="btn !min-h-[36px] !text-xs bg-emerald-800 text-white">
+              ✔ Đã xong
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /**************************************************************
+     * 10. NHẬT KÝ TIẾN HÓA TRƯỚC / SAU & GIAO BÀI THÍCH ỨNG
+     **************************************************************/
+    let modalTargetDrill = null;
+
+    function openCompleteModal(drillId) {
+      const drill = findDrillById(drillId) || activeDrillObj;
+      if (!drill) return;
+      modalTargetDrill = drill;
+
+      document.getElementById("modalDrillName").textContent = drill.title;
+
+      // Tìm bản ghi trước đó để đối chiếu
+      const prev = appState.journals[0];
+      const prevBox = document.getElementById("modalPrevLogBox");
+      if (prev) {
+        prevBox.innerHTML = `💡 <strong>Cảm giác lần tập trước (${prev.date}):</strong><br/>Trước: "${prev.before}" → Sau: "${prev.after}"`;
+      } else {
+        prevBox.innerHTML = `💡 Đây là bản ghi đầu tiên của bạn. Hãy ghi lại cảm giác môi và hơi thở để buổi sau đối chiếu!`;
+      }
+
+      document.getElementById("modalBeforeText").value = "";
+      document.getElementById("modalAfterText").value = "";
+      document.getElementById("completeModal").classList.remove("hidden");
+    }
+
+    function closeCompleteModal() {
+      document.getElementById("completeModal").classList.add("hidden");
+    }
+
+    function finishCurrentDrillPrompt() {
+      if (activeDrillObj) {
+        openCompleteModal(activeDrillObj.id);
+      } else {
+        openCompleteModal("m1w1d1_a");
+      }
+    }
+
+    function confirmCompleteDrill(status) {
+      if (!modalTargetDrill) return;
+      const beforeTxt = document.getElementById("modalBeforeText").value.trim() || "Hơi còn chưa quen lúc mới vào bài";
+      const afterTxt = document.getElementById("modalAfterText").value.trim() || "Tiếng kèn đã tròn và sạch hơn";
+
+      addJournalAndAdapt(modalTargetDrill.title, beforeTxt, afterTxt, status, modalTargetDrill);
+      appState.completedDrills[modalTargetDrill.id] = true;
+      saveState();
+
+      closeCompleteModal();
+      renderCurriculum();
+      renderAdaptiveTasks();
+      renderJournals();
+    }
+
+    function saveManualJournal() {
+      const title = document.getElementById("journalTitleInput").value.trim() || "Phiên luyện tập tự do";
+      const before = document.getElementById("journalBeforeInput").value.trim() || "Mới cầm kèn hơi còn nông";
+      const after = document.getElementById("journalAfterInput").value.trim() || "Đã kiểm soát được lỗ đơn tròn tiếng";
+      const status = document.getElementById("journalStatusSelect").value;
+
+      addJournalAndAdapt(title, before, after, status, null);
+      document.getElementById("journalTitleInput").value = "";
+      document.getElementById("journalBeforeInput").value = "";
+      document.getElementById("journalAfterInput").value = "";
+
+      saveState();
+      renderAdaptiveTasks();
+      renderJournals();
+    }
+
+    function addJournalAndAdapt(title, before, after, status, drillRef) {
+      const nowStr = new Date().toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" });
+      appState.journals.unshift({
+        id: "j_" + Date.now(),
+        date: nowStr,
+        title,
+        before,
+        after,
+        status
+      });
+
+      // Sinh bài tập thích ứng cho ngày mai dựa trên kết quả
+      const baseSeq = (drillRef && drillRef.sequence) ? drillRef.sequence : [
+        { hole: 5, action: "blow", slide: false, beats: 2, label: "C5" },
+        { hole: 5, action: "draw", slide: false, beats: 2, label: "D5" },
+        { hole: 6, action: "blow", slide: false, beats: 2, label: "E5" },
+        { hole: 6, action: "draw", slide: false, beats: 2, label: "F5" }
+      ];
+
+      if (status === "struggling") {
+        appState.adaptiveQueue.unshift({
+          id: "adapt_" + Date.now(),
+          title: `🔧 Bổ trợ khắc phục: ${title} (Chậm 55 BPM)`,
+          minutes: 10,
+          bpm: 55,
+          desc: `Hôm qua bạn ghi chú: "${before}". Hôm nay hạ tốc độ xuống 55 BPM, nghe mẫu trước rồi thổi thật chậm từng nốt.`,
+          sequence: baseSeq
+        });
+      } else {
+        const nextBpm = (drillRef && drillRef.bpm ? drillRef.bpm : 60) + 8;
+        appState.adaptiveQueue.unshift({
+          id: "adapt_" + Date.now(),
+          title: `🚀 Nâng cấp tốc độ: ${title} (${nextBpm} BPM)`,
+          minutes: 10,
+          bpm: nextBpm,
+          desc: `Bạn đã làm chủ bài này ("${after}"). Hôm nay tăng nhẹ +8 BPM để ngón và hơi phản xạ sắc bén hơn!`,
+          sequence: baseSeq
+        });
+      }
+
+      if (appState.adaptiveQueue.length > 3) {
+        appState.adaptiveQueue = appState.adaptiveQueue.slice(0, 3);
+      }
+    }
+
+    function renderJournals() {
+      document.getElementById("journalCountBadge").textContent = `${appState.journals.length} bản ghi`;
+      const hintBox = document.getElementById("previousFeelingHint");
+      if (appState.journals.length > 0) {
+        const latest = appState.journals[0];
+        hintBox.innerHTML = `💡 <strong>Cảm giác buổi tập gần nhất (${latest.date} - ${latest.title}):</strong><br/>Trước khi tập: <em>"${latest.before}"</em> → Sau khi tập: <strong class="text-emerald-300">"${latest.after}"</strong>`;
+      }
+
+      const list = document.getElementById("journalHistoryList");
+      if (appState.journals.length === 0) {
+        list.innerHTML = `<p class="text-xs text-stone-500 italic">Chưa có nhật ký nào.</p>`;
+        return;
+      }
+
+      list.innerHTML = appState.journals.map(j => `
+        <div class="bg-stone-950 border border-stone-800 rounded-xl p-2.5 text-xs">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-amber-300">${j.title}</span>
+            <span class="text-[10px] text-stone-400">${j.date} · ${j.status === "mastered" ? "✅ Đã quen" : "⚠️ Cần rèn thêm"}</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
+            <div class="bg-rose-950/30 border border-rose-900/40 rounded p-1.5 text-stone-300">
+              <strong class="text-rose-300">Trước:</strong> ${j.before}
+            </div>
+            <div class="bg-emerald-950/30 border border-emerald-900/40 rounded p-1.5 text-stone-200">
+              <strong class="text-emerald-300">Sau:</strong> ${j.after}
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /**************************************************************
+     * 11. PHÒNG THU ÂM TRẢ BÀI (MEDIARECORDER)
+     **************************************************************/
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    async function toggleRecording() {
+      const btn = document.getElementById("btnRecord");
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        btn.innerHTML = "⏺ Bấm Thu Âm";
+        btn.className = "btn flex-1 bg-red-900/80 border border-red-600 text-red-100";
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: "audio/webm" });
+          const url = URL.createObjectURL(blob);
+          const timeLabel = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+          const item = document.createElement("div");
+          item.className = "bg-stone-950 border border-stone-800 rounded-lg p-2 flex items-center justify-between gap-2";
+          item.innerHTML = `
+            <span class="text-amber-300 font-semibold">Bản thu ${timeLabel}</span>
+            <audio controls src="${url}" class="h-8 w-48"></audio>
+          `;
+          document.getElementById("recordingsList").prepend(item);
+          stream.getTracks().forEach(t => t.stop());
+        };
+        mediaRecorder.start();
+        btn.innerHTML = "⏹ Đang thu... (Bấm để dừng)";
+        btn.className = "btn flex-1 bg-rose-600 text-white animate-pulse";
+      } catch (err) {
+        alert("Trình duyệt chưa cấp quyền Micro. Hãy mở link trên Chrome/Safari và cho phép Micro!");
+      }
+    }
+
+    /**************************************************************
+     * 12. CHUYỂN ĐỔI MÀN DỌC / MÀN NGANG, SAO LƯU, NẠP & RESET
+     **************************************************************/
+    function applyLayoutUI() {
+      const main = document.getElementById("mainContainer");
+      const btn = document.getElementById("btnToggleLayout");
+      if (appState.layout === "landscape") {
+        main.className = "layout-landscape";
+        btn.textContent = "↔ Màn Ngang";
+      } else {
+        main.className = "layout-portrait";
+        btn.textContent = "↕ Màn Dọc";
+      }
+    }
+
+    function toggleLayout() {
+      appState.layout = appState.layout === "portrait" ? "landscape" : "portrait";
+      saveState();
+      applyLayoutUI();
+    }
+
+    function exportData() {
+      const dataStr = JSON.stringify(appState, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const dateStr = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `chromatic-90h-backup-${dateStr}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          appState = { ...appState, ...imported };
+          saveState();
+          initApp();
+          alert("Đã nạp dữ liệu đồng bộ thành công 100%!");
+        } catch (err) {
+          alert("File JSON không hợp lệ!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function openResetMenu() {
+      document.getElementById("resetModal").classList.remove("hidden");
+    }
+
+    function closeResetMenu() {
+      document.getElementById("resetModal").classList.add("hidden");
+    }
+
+    function resetTimerOnly() {
+      appState.remainingSeconds = TOTAL_90H_SECONDS;
+      sessionRemainingSec = 15 * 60;
+      saveState();
+      updateTimersUI();
+      closeResetMenu();
+    }
+
+    function factoryResetAll() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    function openAddDrillModal() {
+      const title = prompt("Nhập tên bài tập hoặc bản nhạc bạn muốn thêm:");
+      if (!title) return;
+      const mins = parseInt(prompt("Số phút tập bài này:", "15"), 10) || 15;
+      const bpm = parseInt(prompt("Tốc độ BPM:", "65"), 10) || 65;
+      const desc = prompt("Ghi chú cách thổi / số lỗ:", "Tập chậm, giữ hơi đều từ cơ hoành.") || "";
+
+      appState.customDrills.push({
+        id: "custom_" + Date.now(),
+        month: appState.selectedMonth,
+        type: "BÀI TỰ THÊM",
+        title,
+        minutes: mins,
+        bpm,
+        desc,
+        sequence: [
+          { hole: 5, action: "blow", slide: false, beats: 2, label: "C5" },
+          { hole: 6, action: "blow", slide: false, beats: 2, label: "E5" },
+          { hole: 7, action: "blow", slide: false, beats: 4, label: "G5" }
+        ]
+      });
+      saveState();
+      renderCurriculum();
+    }
+
+    /**************************************************************
+     * KHỞI ĐỘNG ỨNG DỤNG
+     **************************************************************/
+    function initApp() {
+      loadState();
+      applyLayoutUI();
+      updateBreathButtonsUI();
+      selectHoleAndPlay(5, false);
+      updateTimersUI();
+      renderAdaptiveTasks();
+      renderCurriculum();
+      renderJournals();
+    }
+
+    window.addEventListener("DOMContentLoaded", initApp);
+  </script>
+</body>
+</html>
